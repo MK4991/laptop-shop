@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Laptop Details | Laptop Store</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/laptop-details.css">
+    <link rel="stylesheet" href="/css/mobile-responsive.css">
+
+    <script src="/js/theme.js" defer></script>
+    <script src="/js/laptop-details.js" defer></script>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="container navbar">
+
+            <a href="/" class="brand">
+                <span class="brand-icon">L</span>
+                <span>Laptop<span class="brand-highlight">Store</span></span>
+            </a>
+
+            <nav class="main-nav">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/laptops" class="nav-link">Browse Laptops</a>
+            </nav>
+
+            <div class="nav-actions">
+                <button
+                    id="themeToggle"
+                    class="theme-toggle"
+                    type="button"
+                    aria-label="Switch theme">
+                    <span id="themeIcon">☾</span>
+                </button>
+            </div>
+
+        </div>
+    </header>
+
+
+    <main class="details-section">
+
+        <div class="container">
+
+            <a href="/laptops" class="back-link">
+                ← Back to laptops
+            </a>
+
+            <div id="loadingMessage" class="details-message">
+                Loading laptop details...
+            </div>
+
+            <div id="errorMessage" class="details-message error-message" hidden>
+                Laptop not found.
+            </div>
+
+
+            <div id="laptopDetails" class="details-layout" hidden>
+
+                <!-- Image Gallery -->
+                <section class="details-gallery">
+
+                    <div class="main-image-container">
+                        <img id="mainLaptopImage" src="" alt="Laptop image">
+                    </div>
+
+                    <div id="thumbnailGallery" class="thumbnail-gallery">
+                    </div>
+
+                </section>
+
+
+                <!-- Laptop Information -->
+                <section class="details-information">
+
+                    <span id="laptopBrand" class="details-brand"></span>
+
+                    <h1 id="laptopName"></h1>
+
+                    <div class="details-price" id="laptopPrice"></div>
+
+                    <div class="details-status">
+                        <span id="availabilityStatus"></span>
+                        <span id="laptopCondition"></span>
+                    </div>
+
+                    <p id="quantityText" class="quantity-text"></p>
+
+                    <div class="details-divider"></div>
+
+                    <h2>Technical Specifications</h2>
+
+                    <div class="specifications-list">
+
+                        <div class="specification-row">
+                            <span>Processor Brand</span>
+                            <strong id="processorBrand"></strong>
+                        </div>
+
+                        <div class="specification-row">
+                            <span>Processor Model</span>
+                            <strong id="processorModel"></strong>
+                        </div>
+
+                        <div class="specification-row">
+                            <span>Processor Generation</span>
+                            <strong id="processorGeneration"></strong>
+                        </div>
+
+                        <div class="specification-row">
+                            <span>RAM</span>
+                            <strong id="ramCapacity"></strong>
+                        </div>
+
+                        <div class="specification-row">
+                            <span>Storage</span>
+                            <strong id="storageCapacity"></strong>
+                        </div>
+
+                        <div class="specification-row">
+                            <span>Storage Type</span>
+                            <strong id="storageType"></strong>
+                        </div>
+
+                        <div class="specification-row">
+                            <span>Graphics Card</span>
+                            <strong id="graphicsCard"></strong>
+                        </div>
+
+                        <div class="specification-row">
+                            <span>Screen Size</span>
+                            <strong id="screenSize"></strong>
+                        </div>
+
+                    </div>
+
+                    <div class="details-actions">
+                        <a href="/laptops" class="back-button">
+                            Browse More Laptops
+                        </a>
+                    </div>
+
+                </section>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <footer class="site-footer">
+        <div class="container footer-content">
+
+            <a href="/" class="brand footer-brand">
+                <span class="brand-icon">L</span>
+                <span>Laptop<span class="brand-highlight">Store</span></span>
+            </a>
+
+            <p>Find the right laptop for your needs.</p>
+
+            <span class="copyright">
+                © <span id="currentYear"></span> Laptop Store.
+                All rights reserved.
+            </span>
+
+        </div>
+    </footer>
+
+</body>
+</html>

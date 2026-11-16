@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Login | LIQ TECH</title>
+
+    <link rel="stylesheet" href="/css/admin-login.css">
+</head>
+<body>
+
+    <main class="login-page">
+
+        <!-- Left Branding Panel -->
+        <section class="branding-panel">
+
+            <div class="brand">
+                <div class="brand-logo">L</div>
+                <div>
+                    <h2>LIQ TECH</h2>
+                    <span>TECHNOLOGY STORE</span>
+                </div>
+            </div>
+
+            <div class="branding-content">
+                <span class="welcome-label">ADMINISTRATION PORTAL</span>
+
+                <h1>Manage your inventory with confidence.</h1>
+
+                <p>
+                    Your central workspace for managing laptop listings,
+                    product images, and inventory information.
+                </p>
+
+                <div class="feature-list">
+
+                    <div class="feature">
+                        <span class="feature-icon">✓</span>
+                        <span>Manage laptop inventory</span>
+                    </div>
+
+                    <div class="feature">
+                        <span class="feature-icon">✓</span>
+                        <span>Organize product images</span>
+                    </div>
+
+                    <div class="feature">
+                        <span class="feature-icon">✓</span>
+                        <span>Monitor stock availability</span>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="branding-footer">
+                <span>LIQ TECH Administration</span>
+                <span>Secure Access</span>
+            </div>
+
+            <div class="decorative-circle circle-one"></div>
+            <div class="decorative-circle circle-two"></div>
+
+        </section>
+
+
+        <!-- Right Login Panel -->
+        <section class="login-panel">
+
+            <div class="login-content">
+
+                <div class="mobile-brand">
+                    <div class="brand-logo">L</div>
+                    <h2>LIQ TECH</h2>
+                </div>
+
+                <div class="login-heading">
+                    <span class="eyebrow">WELCOME BACK</span>
+
+                    <h1>Admin Login</h1>
+
+                    <p>
+                        Enter your credentials to access your dashboard.
+                    </p>
+                </div>
+
+
+                <form id="loginForm">
+
+                    <div class="form-group">
+                        <label for="username">Username</label>
+
+                        <div class="input-wrapper">
+                            <span class="input-icon">♙</span>
+
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                placeholder="Enter your username"
+                                autocomplete="username"
+                                required
+                            >
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+
+                        <div class="input-wrapper">
+                            <span class="input-icon">▣</span>
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                id="togglePassword"
+                                class="password-toggle"
+                            >
+                                Show
+                            </button>
+                        </div>
+                    </div>
+
+
+                    <p id="errorMessage" class="error-message"></p>
+
+                    <button type="submit" id="loginButton" class="login-button">
+                        <span id="buttonText">Sign In</span>
+                        <span class="button-arrow">→</span>
+                    </button>
+
+                </form>
+
+
+                <div class="login-security">
+                    <span class="security-icon">▣</span>
+                    <span>Authorized administrators only</span>
+                </div>
+
+            </div>
+
+            <footer class="login-footer">
+                © 2026 LIQ TECH. All rights reserved.
+            </footer>
+
+        </section>
+
+    </main>
+
+    <script src="/js/admin-login.js"></script>
+
+</body>
+</html>

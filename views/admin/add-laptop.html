@@ -1,0 +1,283 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Laptop | Admin</title>
+    <link rel="stylesheet" href="/css/admin-add-laptop.css">
+</head>
+<body>
+
+    <div class="page-layout">
+
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">L</div>
+                <div>
+                    <h2>LIQ TECH</h2>
+                    <span>Admin Panel</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="/admin">
+                    <span class="nav-icon">⌂</span>
+                    Dashboard
+                </a>
+                <a href="/admin#inventory">
+                    <span class="nav-icon">▤</span>
+                    Laptop Inventory
+                </a>
+                <a href="/admin/laptops/new" class="active">
+                    <span class="nav-icon">＋</span>
+                    Add New Laptop
+                </a>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <div class="admin-avatar">A</div>
+                <div>
+                    <strong>Administrator</strong>
+                    <span>Store Management</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+
+            <header class="topbar">
+                <div>
+                    <p class="breadcrumb">Dashboard / Laptop Inventory / Add Laptop</p>
+                    <h1>Add New Laptop</h1>
+                    <p class="page-subtitle">
+                        Add a laptop to your store inventory.
+                    </p>
+                </div>
+
+                <a href="/admin" class="back-button">
+                    ← Back to Dashboard
+                </a>
+            </header>
+
+            <form id="addLaptopForm" class="laptop-form">
+
+                <div class="form-intro">
+                    <div>
+                        <h2>Laptop Information</h2>
+                        <p>Enter the laptop details below. Fields marked with * are required.</p>
+                    </div>
+                    <span class="form-tag">NEW LISTING</span>
+                </div>
+
+                <section class="form-section">
+                    <div class="section-heading">
+                        <div class="section-icon">▣</div>
+                        <div>
+                            <h3>Basic Information</h3>
+                            <p>Identify the laptop model.</p>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="brand_name">Brand <span>*</span></label>
+                            <input type="text" id="brand_name" name="brand_name"
+                                placeholder="e.g. Dell, HP, Lenovo" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="model">Model <span>*</span></label>
+                            <input type="text" id="model" name="model"
+                                placeholder="e.g. Latitude 5420" required>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="form-section">
+                    <div class="section-heading">
+                        <div class="section-icon">⌘</div>
+                        <div>
+                            <h3>Processor</h3>
+                            <p>Specify the laptop's processor details.</p>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="processor_brand">Processor Brand <span>*</span></label>
+                            <select id="processor_brand" name="processor_brand" required>
+                                <option value="">Select processor brand</option>
+                                <option value="Intel">Intel</option>
+                                <option value="AMD">AMD</option>
+                                <option value="Apple">Apple</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="processor_model">Processor Model <span>*</span></label>
+                            <input type="text" id="processor_model" name="processor_model"
+                                placeholder="e.g. Core i5-1135G7" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="processor_generation">Processor Generation</label>
+                            <input type="number" id="processor_generation"
+                                name="processor_generation" min="1"
+                                placeholder="e.g. 11">
+                            <small>Leave empty if not applicable.</small>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="form-section">
+                    <div class="section-heading">
+                        <div class="section-icon">▤</div>
+                        <div>
+                            <h3>Memory and Storage</h3>
+                            <p>Enter RAM and storage specifications.</p>
+                        </div>
+                    </div>
+
+                    <div class="form-grid three-columns">
+                        <div class="form-group">
+                            <label for="ram_capacity">RAM (GB) <span>*</span></label>
+                            <input type="number" id="ram_capacity" name="ram_capacity"
+                                min="1" placeholder="e.g. 8" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="storage_capacity">Storage (GB) <span>*</span></label>
+                            <input type="number" id="storage_capacity"
+                                name="storage_capacity" min="1"
+                                placeholder="e.g. 512" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="storage_type">Storage Type <span>*</span></label>
+                            <select id="storage_type" name="storage_type" required>
+                                <option value="">Select type</option>
+                                <option value="SSD">SSD</option>
+                                <option value="HDD">HDD</option>
+                                <option value="NVMe SSD">NVMe SSD</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="form-section">
+                    <div class="section-heading">
+                        <div class="section-icon">▧</div>
+                        <div>
+                            <h3>Other Specifications</h3>
+                            <p>Additional hardware information.</p>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="graphics_card">Graphics Card <span>*</span></label>
+                            <input type="text" id="graphics_card" name="graphics_card"
+                                placeholder="e.g. Intel Iris Xe, NVIDIA GTX 1650" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="screen_size">Screen Size (inches) <span>*</span></label>
+                            <input type="number" id="screen_size" name="screen_size"
+                                min="1" step="0.1" placeholder="e.g. 15.6" required>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="form-section">
+                    <div class="section-heading">
+                        <div class="section-icon">▣</div>
+                        <div>
+                            <h3>Inventory and Pricing</h3>
+                            <p>Set the laptop's condition, price, and stock.</p>
+                        </div>
+                    </div>
+
+                    <div class="form-grid three-columns">
+                        <div class="form-group">
+                            <label for="condition">Condition <span>*</span></label>
+                            <select id="condition" name="condition" required>
+                                <option value="">Select condition</option>
+                                <option value="New">New</option>
+                                <option value="Used">Used</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="price">Price (ETB) <span>*</span></label>
+                            <input type="number" id="price" name="price"
+                                min="0.01" step="0.01"
+                                placeholder="e.g. 45000" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="quantity">Quantity <span>*</span></label>
+                            <input type="number" id="quantity" name="quantity"
+                                min="1" value="1" required>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="form-section image-section">
+                    <div class="section-heading">
+                        <div class="section-icon">▧</div>
+                        <div>
+                            <h3>Laptop Images</h3>
+                            <p>Upload photos customers can view on the website.</p>
+                        </div>
+                    </div>
+
+                    <div class="upload-area">
+                        <div class="upload-symbol">↑</div>
+                        <h4>Choose laptop images</h4>
+                        <p>Select up to 5 images, each 5 MB or smaller.</p>
+
+                        <label for="images" class="upload-button">
+                            Browse Images
+                        </label>
+
+                        <input type="file" id="images" name="images"
+                            accept="image/jpeg,image/png,image/webp" multiple>
+
+                        <small>Supported formats: JPG, PNG, WebP</small>
+                    </div>
+
+                    <div class="preview-heading">
+                        <label>Select Primary Image</label>
+                        <span>This image will represent the laptop.</span>
+                    </div>
+
+                    <div id="imagePreview" class="image-preview">
+                        <p>No images selected.</p>
+                    </div>
+                </section>
+
+                <div id="message"></div>
+
+                <div class="form-footer">
+                    <a href="/admin" class="cancel-button">Cancel</a>
+                    <button type="submit" id="submitBtn" class="submit-button">
+                        Add Laptop to Inventory
+                        <span>→</span>
+                    </button>
+                </div>
+
+            </form>
+
+            <footer class="page-footer">
+                LIQ TECH Admin Panel · Inventory Management
+            </footer>
+
+        </main>
+    </div>
+
+    <script src="/js/admin-add-laptop.js"></script>
+</body>
+</html>

@@ -1,0 +1,453 @@
+/* =========================================
+   MOBILE RESPONSIVE OVERRIDES
+   Load this file AFTER the page's existing CSS.
+========================================= */
+
+/* Prevent accidental horizontal scrolling */
+html,
+body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+img {
+    max-width: 100%;
+}
+
+/* -------------------------
+   Shared navigation
+------------------------- */
+@media (max-width: 650px) {
+    .container {
+        width: calc(100% - 32px);
+    }
+
+    .navbar {
+        min-height: auto;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 10px 12px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+
+    .brand {
+        min-width: 0;
+        font-size: 17px;
+        gap: 8px;
+    }
+
+    .brand-icon {
+        width: 32px;
+        height: 32px;
+        flex-shrink: 0;
+        font-size: 17px;
+    }
+
+    .main-nav {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        width: 100%;
+        justify-content: center;
+        gap: clamp(16px, 6vw, 28px);
+        padding-top: 8px;
+        border-top: 1px solid var(--border);
+    }
+
+    .nav-link {
+        font-size: 12px;
+        padding: 5px 0;
+    }
+
+    .nav-actions {
+        grid-column: 2;
+        grid-row: 1;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+
+    .theme-toggle {
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+    }
+
+    .nav-button {
+        display: none;
+    }
+}
+
+/* -------------------------
+   Homepage
+------------------------- */
+@media (max-width: 900px) {
+    .hero-content {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+        gap: 24px;
+    }
+
+    .hero-text h1 {
+        font-size: clamp(34px, 5vw, 44px);
+    }
+
+    .why-us-content {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .why-us-content .primary-button {
+        justify-self: start;
+    }
+}
+
+@media (max-width: 650px) {
+    .hero-content {
+        min-height: auto;
+        grid-template-columns: 1fr;
+        gap: 24px;
+        padding-top: 48px;
+        padding-bottom: 32px;
+    }
+
+    .hero-text h1 {
+        max-width: 100%;
+        margin-top: 18px;
+        font-size: clamp(34px, 9vw, 43px);
+        letter-spacing: -1.5px;
+    }
+
+    .hero-text > p {
+        margin-top: 16px;
+        font-size: 14px;
+        line-height: 1.75;
+    }
+
+    .hero-actions {
+        gap: 10px;
+        margin-top: 22px;
+    }
+
+    .primary-button,
+    .secondary-button {
+        min-height: 46px;
+        padding: 12px 16px;
+        font-size: 12px;
+    }
+
+    .hero-visual {
+        min-height: 260px;
+        margin-top: 0;
+    }
+
+    .visual-circle {
+        width: min(250px, 75vw);
+        height: min(250px, 75vw);
+    }
+
+    .laptop-illustration {
+        width: min(320px, 90%);
+    }
+
+    .laptop-screen {
+        height: 165px;
+    }
+
+    .floating-card {
+        padding: 9px 11px;
+        font-size: 10px;
+    }
+
+    .card-top {
+        top: 8px;
+        right: 0;
+    }
+
+    .card-bottom {
+        bottom: 8px;
+        left: 0;
+    }
+
+    .highlights-section {
+        padding: 28px 0;
+    }
+
+    .highlights-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .featured-section {
+        padding: 52px 0;
+    }
+
+    .section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+
+    .section-heading h2 {
+        font-size: 25px;
+    }
+
+    .featured-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .product-image {
+        height: 210px;
+    }
+
+    .product-details {
+        padding: 16px;
+    }
+
+    .why-us-section {
+        padding: 48px 0;
+    }
+
+    .why-us-content {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .why-us-content h2 {
+        font-size: 24px;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+    }
+}
+
+/* -------------------------
+   Laptop catalogue
+------------------------- */
+@media (max-width: 850px) {
+    .catalogue-layout {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 22px;
+    }
+
+    .filter-sidebar {
+        position: static;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .filter-header {
+        grid-column: 1 / -1;
+    }
+
+    .filter-group {
+        min-width: 0;
+        margin-bottom: 0;
+    }
+
+    .catalogue-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 560px) {
+    .catalogue-section {
+        padding: 38px 0 55px;
+    }
+
+    .catalogue-heading {
+        margin-bottom: 24px;
+    }
+
+    .catalogue-heading h1 {
+        font-size: 30px;
+        letter-spacing: -0.8px;
+    }
+
+    .catalogue-heading p {
+        font-size: 13px;
+    }
+
+    .catalogue-search {
+        width: 100%;
+        min-height: 52px;
+        gap: 5px;
+        margin-bottom: 24px;
+        padding: 6px 7px 6px 11px;
+    }
+
+    .search-icon {
+        margin-right: 4px;
+        font-size: 20px;
+    }
+
+    .catalogue-search input {
+        width: 100%;
+        padding: 10px 3px;
+        font-size: 12px;
+    }
+
+    .catalogue-search button {
+        flex-shrink: 0;
+        padding: 11px 12px;
+        font-size: 11px;
+    }
+
+    .filter-sidebar {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 16px;
+    }
+
+    .filter-header {
+        grid-column: 1;
+        margin-bottom: 0;
+        padding-bottom: 12px;
+    }
+
+    .filter-group select,
+    .filter-group input {
+        min-height: 44px;
+        font-size: 13px;
+    }
+
+    .products-toolbar {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .products-toolbar select {
+        width: 100%;
+        min-height: 44px;
+    }
+
+    .catalogue-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .catalogue-grid .product-image {
+        height: 220px;
+    }
+
+    .catalogue-grid .product-details {
+        padding: 16px;
+    }
+
+    .catalogue-grid .product-name {
+        min-height: 0;
+    }
+
+    .catalogue-grid .product-button {
+        min-height: 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+/* -------------------------
+   Laptop details page
+------------------------- */
+@media (max-width: 900px) {
+    .details-layout {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 28px;
+    }
+
+    .details-information {
+        padding: 0;
+    }
+}
+
+@media (max-width: 550px) {
+    .details-section {
+        padding: 28px 0 50px;
+    }
+
+    .back-link {
+        margin-bottom: 18px;
+    }
+
+    .main-image-container {
+        width: 100%;
+        height: clamp(220px, 65vw, 300px);
+        padding: 14px;
+    }
+
+    .thumbnail-gallery {
+        gap: 9px;
+        margin-top: 12px;
+    }
+
+    .thumbnail {
+        flex-basis: 72px;
+        height: 66px;
+        min-width: 72px;
+    }
+
+    .details-information h1 {
+        font-size: clamp(24px, 7vw, 29px);
+        overflow-wrap: anywhere;
+    }
+
+    .details-price {
+        font-size: 25px;
+    }
+
+    .details-status {
+        gap: 8px;
+    }
+
+    .details-status span {
+        padding: 8px 10px;
+        font-size: 11px;
+    }
+
+    .specification-row {
+        align-items: flex-start;
+        gap: 12px;
+        padding: 13px 11px;
+    }
+
+    .specification-row span,
+    .specification-row strong {
+        font-size: 12px;
+        overflow-wrap: anywhere;
+    }
+
+    .specification-row strong {
+        max-width: 58%;
+    }
+
+    .details-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .back-button,
+    .telegram-button {
+        width: 100%;
+        min-height: 46px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 0;
+    }
+
+    .details-message {
+        padding: 35px 16px;
+    }
+}
+
+/* Ensure JavaScript-controlled hidden elements remain hidden */
+[hidden] {
+    display: none !important;
+}

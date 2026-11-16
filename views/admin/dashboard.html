@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | Laptop Store</title>
+
+    <link rel="stylesheet" href="/css/admin-dashboard.css">
+</head>
+
+<body>
+
+    <div class="admin-layout">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+
+            <div class="sidebar-brand">
+                <div class="brand-icon">L</div>
+                <div>
+                    <h2>LIQ TECH</h2>
+                    <span>ADMIN PANEL</span>
+                </div>
+            </div>
+
+            <div class="sidebar-label">WORKSPACE</div>
+
+            <nav class="sidebar-nav">
+                <a href="/admin" class="nav-link active">
+                    <span class="nav-icon">▦</span>
+                    Dashboard
+                </a>
+
+                <a href="#inventory" class="nav-link">
+                    <span class="nav-icon">▤</span>
+                    Laptop Inventory
+                </a>
+
+                <button class="nav-link" id="sidebarAddLaptopBtn">
+                    <span class="nav-icon">＋</span>
+                    Add New Laptop
+                </button>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <div class="sidebar-profile">
+                    <div class="profile-avatar">A</div>
+                    <div class="profile-info">
+                        <strong>Administrator</strong>
+                        <span>Store Manager</span>
+                    </div>
+                </div>
+
+                <button id="logoutBtn" class="sidebar-logout">
+                    <span>↪</span>
+                    Logout
+                </button>
+            </div>
+
+        </aside>
+
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Topbar -->
+            <header class="topbar">
+                <div>
+                    <span class="breadcrumb">Workspace / Dashboard</span>
+                    <h2>Overview</h2>
+                </div>
+
+                <div class="topbar-right">
+                    <div class="admin-welcome">
+                        <span class="online-dot"></span>
+                        <span id="adminUsername">Welcome, Admin</span>
+                    </div>
+
+                    <div class="topbar-avatar">A</div>
+                </div>
+            </header>
+
+
+            <!-- Dashboard Content -->
+            <section class="dashboard-content">
+
+                <div class="welcome-section">
+                    <div>
+                        <span class="section-tag">STORE MANAGEMENT</span>
+                        <h1>Welcome back!</h1>
+                        <p>Here's what's happening with your laptop inventory.</p>
+                    </div>
+
+                    <button class="primary-btn" id="addLaptopBtn">
+                        <span>＋</span>
+                        Add New Laptop
+                    </button>
+                </div>
+
+
+                <!-- Statistics Cards -->
+                <section class="stats-grid">
+
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <span>Total Models</span>
+                            <div class="stat-icon blue">▤</div>
+                        </div>
+                        <h2 id="totalModels">--</h2>
+                        <p>Registered laptop models</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <span>Available Models</span>
+                            <div class="stat-icon green">✓</div>
+                        </div>
+                        <h2 id="availableModels">--</h2>
+                        <p>Models currently available</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <span>Total Units</span>
+                            <div class="stat-icon purple">▦</div>
+                        </div>
+                        <h2 id="totalUnits">--</h2>
+                        <p>Physical units in inventory</p>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-top">
+                            <span>Unavailable Models</span>
+                            <div class="stat-icon orange">!</div>
+                        </div>
+                        <h2 id="unavailableModels">--</h2>
+                        <p>Sold or unavailable models</p>
+                    </div>
+
+                </section>
+
+
+                <!-- Inventory -->
+                <section class="inventory-section" id="inventory">
+
+                    <div class="inventory-header">
+                        <div>
+                            <span class="section-tag">INVENTORY MANAGEMENT</span>
+                            <h2>Laptop Inventory</h2>
+                            <p>View and manage all registered laptops.</p>
+                        </div>
+
+                        <span class="inventory-label">PRODUCT CATALOG</span>
+                    </div>
+
+                    <!-- Dashboard messages -->
+                    <p id="dashboardMessage" class="dashboard-message"></p>
+
+                    <div class="table-container">
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Brand</th>
+                                    <th>Model</th>
+                                    <th>Processor</th>
+                                    <th>RAM</th>
+                                    <th>Storage</th>
+                                    <th>Condition</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="laptopTableBody">
+                                <tr>
+                                    <td colspan="10">Loading inventory...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                    <div class="table-footer">
+                        <span>Inventory is updated from your database.</span>
+                        <span class="secure-label">● Live inventory</span>
+                    </div>
+
+                </section>
+
+
+                <footer class="dashboard-footer">
+                    <span>LIQ TECH Admin Panel</span>
+                    <span>Inventory Management System</span>
+                </footer>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <dialog id="confirmationDialog" class="confirmation-dialog">
+        <div class="modal-content">
+            <div class="modal-icon">
+                <span>!</span>
+            </div>
+
+            <h2 id="confirmationTitle">Delete laptop?</h2>
+
+            <p id="confirmationMessage">
+                Are you sure you want to delete this laptop?
+                This action cannot be undone.
+            </p>
+
+            <form method="dialog" class="modal-actions">
+                <button type="submit" value="cancel" class="modal-cancel">
+                    Cancel
+                </button>
+
+                <button type="submit" value="confirm" class="modal-delete">
+                    Delete Laptop
+                </button>
+            </form>
+        </div>
+    </dialog>
+    <script src="/js/admin-dashboard.js"></script>
+
+</body>
+
+</html>

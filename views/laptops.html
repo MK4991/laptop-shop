@@ -1,0 +1,310 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+        content="Browse and compare available laptops. Find the right laptop for your needs and budget.">
+
+    <title>Browse Laptops | Laptop Store</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/laptops.css">
+    <link rel="stylesheet" href="/css/mobile-responsive.css">
+
+    <script src="/js/theme.js" defer></script>
+    <script src="/js/laptops.js" defer></script>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <header class="site-header">
+        <div class="container navbar">
+
+            <a href="/" class="brand">
+                <span class="brand-icon">L</span>
+                <span>Laptop<span class="brand-highlight">Store</span></span>
+            </a>
+
+            <nav class="main-nav">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/laptops" class="nav-link active">
+                    Browse Laptops
+                </a>
+            </nav>
+
+            <div class="nav-actions">
+                <button
+                    id="themeToggle"
+                    class="theme-toggle"
+                    type="button"
+                    aria-label="Switch to dark mode"
+                    title="Toggle theme">
+                    <span id="themeIcon">☾</span>
+                </button>
+            </div>
+
+        </div>
+    </header>
+
+
+    <!-- Catalogue Heading -->
+    <main class="catalogue-section">
+
+        <div class="container">
+
+            <div class="catalogue-heading">
+                <span class="section-tag">OUR COLLECTION</span>
+
+                <h1>Find Your Perfect Laptop</h1>
+
+                <p>
+                    Browse our collection and find a laptop
+                    that matches your needs and budget.
+                </p>
+            </div>
+
+
+            <!-- Search -->
+            <div class="catalogue-search">
+                <span class="search-icon">⌕</span>
+
+                <input
+                    type="search"
+                    id="searchInput"
+                    placeholder="Search by brand, model, or processor..."
+                    autocomplete="off">
+
+                <button id="searchButton" type="button">
+                    Search
+                </button>
+            </div>
+
+
+            <!-- Catalogue Layout -->
+            <div class="catalogue-layout">
+
+
+                <!-- Filters Sidebar -->
+                <aside class="filter-sidebar">
+
+                    <div class="filter-header">
+                        <h2>Filters</h2>
+
+                        <button id="clearFilters" type="button">
+                            Clear All
+                        </button>
+                    </div>
+
+
+                    <!-- Brand Filter -->
+                    <div class="filter-group">
+                        <h3>Brand</h3>
+
+                        <select id="brandFilter">
+                            <option value="">All Brands</option>
+                        </select>
+                    </div>
+
+
+                    <!-- Processor Brand -->
+                    <div class="filter-group">
+                        <h3>Processor Brand</h3>
+
+                        <select id="processorFilter">
+                            <option value="">All Processors</option>
+                            <option value="Intel">Intel</option>
+                            <option value="AMD">AMD</option>
+                            <option value="Apple">Apple</option>
+                        </select>
+                    </div>
+
+
+                    <!-- Processor Generation -->
+                    <div class="filter-group">
+                        <h3>Processor Generation</h3>
+
+                        <select id="generationFilter">
+                            <option value="">All Generations</option>
+                        </select>
+                    </div>
+
+
+                    <!-- RAM -->
+                    <div class="filter-group">
+                        <h3>RAM</h3>
+
+                        <select id="ramFilter">
+                            <option value="">All RAM Sizes</option>
+                            <option value="4">4 GB</option>
+                            <option value="8">8 GB</option>
+                            <option value="16">16 GB</option>
+                            <option value="32">32 GB</option>
+                            <option value="64">64 GB</option>
+                        </select>
+                    </div>
+
+
+                    <!-- Storage Capacity -->
+                    <div class="filter-group">
+                        <h3>Storage Capacity</h3>
+
+                        <select id="storageFilter">
+                            <option value="">All Capacities</option>
+                            <option value="128">128 GB</option>
+                            <option value="256">256 GB</option>
+                            <option value="512">512 GB</option>
+                            <option value="1024">1 TB</option>
+                            <option value="2048">2 TB</option>
+                        </select>
+                    </div>
+
+
+                    <!-- Storage Type -->
+                    <div class="filter-group">
+                        <h3>Storage Type</h3>
+
+                        <select id="storageTypeFilter">
+                            <option value="">All Types</option>
+                            <option value="SSD">SSD</option>
+                            <option value="NVMe SSD">NVMe SSD</option>
+                            <option value="HDD">HDD</option>
+                        </select>
+                    </div>
+
+
+                    <!-- Price -->
+                    <div class="filter-group">
+                        <h3>Price Range (ETB)</h3>
+
+                        <div class="price-inputs">
+                            <input
+                                type="number"
+                                id="minPrice"
+                                placeholder="Min"
+                                min="0">
+
+                            <span>to</span>
+
+                            <input
+                                type="number"
+                                id="maxPrice"
+                                placeholder="Max"
+                                min="0">
+                        </div>
+                    </div>
+
+
+                    <!-- Condition -->
+                    <div class="filter-group">
+                        <h3>Condition</h3>
+
+                        <select id="conditionFilter">
+                            <option value="">All Conditions</option>
+                            <option value="New">New</option>
+                            <option value="Used">Used</option>
+                        </select>
+                    </div>
+
+
+                    <!-- GPU -->
+                    <div class="filter-group">
+                        <h3>Graphics Card</h3>
+
+                        <input
+                            type="text"
+                            id="gpuFilter"
+                            placeholder="e.g. RTX 3050">
+                    </div>
+
+
+                    <!-- Screen Size -->
+                    <div class="filter-group">
+                        <h3>Screen Size</h3>
+
+                        <select id="screenSizeFilter">
+                            <option value="">All Sizes</option>
+                            <option value="13">13 inch</option>
+                            <option value="14">14 inch</option>
+                            <option value="15">15 inch</option>
+                            <option value="16">16 inch</option>
+                            <option value="17">17 inch</option>
+                        </select>
+                    </div>
+
+                </aside>
+
+
+                <!-- Products -->
+                <section class="catalogue-products">
+
+                    <div class="products-toolbar">
+
+                        <div>
+                            <h2>Available Laptops</h2>
+
+                            <p id="resultCount">
+                                Loading laptops...
+                            </p>
+                        </div>
+
+                        <select id="sortFilter">
+                            <option value="newest">
+                                Newest First
+                            </option>
+
+                            <option value="price_asc">
+                                Price: Low to High
+                            </option>
+
+                            <option value="price_desc">
+                                Price: High to Low
+                            </option>
+                        </select>
+
+                    </div>
+
+
+                    <div id="laptopGrid" class="catalogue-grid">
+
+                        <p class="loading-message">
+                            Loading laptops...
+                        </p>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container footer-content">
+
+            <a href="/" class="brand footer-brand">
+                <span class="brand-icon">L</span>
+                <span>Laptop<span class="brand-highlight">Store</span></span>
+            </a>
+
+            <p>
+                Find the right laptop for your needs.
+            </p>
+
+            <span class="copyright">
+                © <span id="currentYear"></span> Laptop Store.
+                All rights reserved.
+            </span>
+
+        </div>
+    </footer>
+
+</body>
+</html>

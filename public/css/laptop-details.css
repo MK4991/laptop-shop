@@ -1,0 +1,342 @@
+
+/* =====================================
+   LAPTOP DETAILS PAGE
+===================================== */
+
+:root {
+    --details-bg: #f5f7fc;
+    --details-card: #ffffff;
+    --details-soft: #f0f3fa;
+    --details-text: #172033;
+    --details-muted: #718096;
+    --details-border: #e1e7f0;
+    --details-blue: #5f88ff;
+}
+
+html[data-theme="dark"] {
+    --details-bg: #182438;
+    --details-card: #202e44;
+    --details-soft: #263650;
+    --details-text: #f3f6fc;
+    --details-muted: #aab7cb;
+    --details-border: #34445d;
+    --details-blue: #6b91ff;
+}
+
+.details-section {
+    min-height: 80vh;
+    padding: 45px 0 85px;
+    background: var(--details-bg);
+    color: var(--details-text);
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 28px;
+    color: var(--details-blue);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+
+/* =====================================
+   MAIN LAYOUT
+===================================== */
+
+.details-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    gap: 55px;
+    align-items: start;
+}
+
+
+/* =====================================
+   IMAGE GALLERY
+===================================== */
+
+.details-gallery {
+    min-width: 0;
+}
+
+.main-image-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 440px;
+    padding: 30px;
+    overflow: hidden;
+    border: 1px solid var(--details-border);
+    border-radius: 15px;
+    background: var(--details-card);
+}
+
+.main-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: opacity 0.2s ease;
+}
+
+.thumbnail-gallery {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+}
+
+.thumbnail {
+    flex: 0 0 85px;
+    height: 75px;
+    padding: 5px;
+    overflow: hidden;
+    border: 2px solid var(--details-border);
+    border-radius: 9px;
+    background: var(--details-card);
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.thumbnail.active,
+.thumbnail:hover {
+    border-color: var(--details-blue);
+}
+
+
+/* =====================================
+   PRODUCT INFORMATION
+===================================== */
+
+.details-information {
+    min-width: 0;
+    padding: 10px 0;
+}
+
+.details-brand {
+    display: inline-block;
+    margin-bottom: 12px;
+    color: var(--details-blue);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.details-information h1 {
+    margin-bottom: 18px;
+    color: var(--details-text);
+    font-size: clamp(27px, 3vw, 36px);
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: -0.8px;
+}
+
+.details-price {
+    margin-bottom: 20px;
+    color: var(--details-text);
+    font-size: 30px;
+    font-weight: 850;
+}
+
+.details-status {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.details-status span {
+    display: inline-block;
+    padding: 8px 13px;
+    border-radius: 6px;
+    background: var(--details-soft);
+    color: var(--details-muted);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+#availabilityStatus.available {
+    background: rgba(34, 197, 94, 0.12);
+    color: #16a34a;
+}
+
+#availabilityStatus.unavailable {
+    background: rgba(239, 68, 68, 0.12);
+    color: #ef4444;
+}
+
+.quantity-text {
+    margin-top: 10px;
+    color: var(--details-muted);
+    font-size: 13px;
+}
+
+.details-divider {
+    height: 1px;
+    margin: 27px 0;
+    background: var(--details-border);
+}
+
+
+/* =====================================
+   SPECIFICATIONS
+===================================== */
+
+.details-information h2 {
+    margin-bottom: 18px;
+    color: var(--details-text);
+    font-size: 19px;
+    font-weight: 800;
+}
+
+.specifications-list {
+    overflow: hidden;
+    border: 1px solid var(--details-border);
+    border-radius: 10px;
+    background: var(--details-card);
+}
+
+.specification-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--details-border);
+}
+
+.specification-row:last-child {
+    border-bottom: none;
+}
+
+.specification-row span {
+    color: var(--details-muted);
+    font-size: 12px;
+}
+
+.specification-row strong {
+    color: var(--details-text);
+    font-size: 12px;
+    font-weight: 700;
+    text-align: right;
+}
+
+
+/* =====================================
+   ACTIONS
+===================================== */
+
+.details-actions {
+    margin-top: 25px;
+}
+
+.back-button {
+    display: inline-block;
+    padding: 13px 21px;
+    border-radius: 8px;
+    background: var(--details-blue);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 750;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+}
+
+.back-button:hover {
+    opacity: 0.85;
+}
+
+
+/* =====================================
+   LOADING AND ERROR
+===================================== */
+
+.details-message {
+    padding: 50px 20px;
+    border: 1px solid var(--details-border);
+    border-radius: 12px;
+    background: var(--details-card);
+    color: var(--details-muted);
+    text-align: center;
+    font-size: 14px;
+}
+
+.error-message {
+    color: #ef4444;
+}
+
+
+/* =====================================
+   RESPONSIVE DESIGN
+===================================== */
+
+@media (max-width: 900px) {
+    .details-layout {
+        grid-template-columns: 1fr;
+        gap: 35px;
+    }
+
+    .main-image-container {
+        height: 380px;
+    }
+
+    .details-information {
+        padding: 0;
+    }
+}
+
+@media (max-width: 550px) {
+    .details-section {
+        padding: 30px 0 60px;
+    }
+
+    .main-image-container {
+        height: 280px;
+        padding: 18px;
+    }
+
+    .details-information h1 {
+        font-size: 27px;
+    }
+
+    .details-price {
+        font-size: 25px;
+    }
+
+    .specification-row {
+        padding: 13px 12px;
+    }
+
+    .specification-row span,
+    .specification-row strong {
+        font-size: 11px;
+    }
+}
+.telegram-button {
+    display: inline-block;
+    margin-top: 18px;
+    padding: 13px 22px;
+    background: #229ED9;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 8px;
+    text-align: center;
+    transition: background 0.2s ease;
+}
+
+.telegram-button:hover {
+    background: #168ac0;
+}
