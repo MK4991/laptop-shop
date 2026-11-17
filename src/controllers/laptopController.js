@@ -1,5 +1,13 @@
 
 const prisma = require('../config/database');
+const fs = require('fs');
+const path = require('path');
+const { cloudinary, isConfigured: isCloudinaryConfigured } = require('../config/cloudinary');
+
+const localLaptopImagesDirectory = path.join(
+    __dirname,
+    '../../public/images/laptops'
+);
 
 const getAllLaptops = async (req, res) => {
     try {
@@ -482,7 +490,8 @@ const deleteLaptop = async (req, res) => {
         const existingLaptop = await prisma.laptop.findUnique({
             where: {
                 laptop_id: id
-            }
+            },
+            include: { images: true }
         });
 
         if (!existingLaptop) {
@@ -492,12 +501,44 @@ const deleteLaptop = async (req, res) => {
             });
         }
 
+        const cloudinaryImages = existingLaptop.images.filter(
+            (image) => image.cloudinary_public_id
+        );
+        if (cloudinaryImages.length && !isCloudinaryConfigured) {
+            return res.status(503).json({
+                success: false,
+                message: 'Image storage is not configured on the server.'
+            });
+        }
+
         // Delete the laptop
         await prisma.laptop.delete({
             where: {
                 laptop_id: id
             }
         });
+
+        const cleanupResults = await Promise.allSettled([
+            ...cloudinaryImages.map((image) =>
+                cloudinary.uploader.destroy(
+                    image.cloudinary_public_id,
+                    { resource_type: 'image' }
+                )
+            ),
+            ...existingLaptop.images
+                .filter((image) => !image.cloudinary_public_id)
+                .map((image) => {
+                    if (!image.image_url?.startsWith('/images/laptops/')) return;
+                    const filePath = path.join(
+                        localLaptopImagesDirectory,
+                        path.basename(image.image_url)
+                    );
+                    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+                })
+        ]);
+        cleanupResults
+            .filter((result) => result.status === 'rejected')
+            .forEach((result) => console.error('Laptop image cleanup failed:', result.reason));
 
         res.status(200).json({
             success: true,

@@ -2,21 +2,41 @@
 const prisma = require('../config/database');
 const fs = require('fs');
 const path = require('path');
+const { cloudinary, isConfigured } = require('../config/cloudinary');
 
 const uploadDirectory = path.join(
     __dirname,
     '../../public/images/laptops'
 );
 
-// Delete uploaded files if an operation fails
-const removeUploadedFiles = (files) => {
-    for (const file of files || []) {
-        const filePath = path.join(uploadDirectory, file.filename);
+const uploadToCloudinary = (file, folder) => new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream({
+        folder,
+        resource_type: 'image',
+        unique_filename: true,
+        overwrite: false
+    }, (error, result) => {
+        if (error) return reject(error);
+        resolve(result);
+    });
 
-        if (fs.existsSync(filePath)) {
-            fs.unlinkSync(filePath);
-        }
-    }
+    stream.end(file.buffer);
+});
+
+const deleteCloudinaryAssets = async (assets) => {
+    await Promise.allSettled(
+        assets.filter((asset) => asset?.public_id).map((asset) =>
+            cloudinary.uploader.destroy(asset.public_id, { resource_type: 'image' })
+        )
+    );
+};
+
+const deleteLegacyLocalFile = (imageUrl) => {
+    if (!imageUrl || !imageUrl.startsWith('/images/laptops/')) return;
+
+    const filename = path.basename(imageUrl);
+    const filePath = path.join(uploadDirectory, filename);
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
 };
 
 // Check and convert an ID to BigInt
@@ -31,13 +51,20 @@ const parseId = (id) => {
 // Upload multiple laptop images
 const uploadLaptopImages = async (req, res) => {
     const uploadedFiles = req.files || [];
+    const uploadedAssets = [];
+    let recordsSaved = false;
 
     try {
+        if (!isConfigured) {
+            return res.status(503).json({
+                success: false,
+                message: 'Image storage is not configured on the server.'
+            });
+        }
+
         const laptopId = parseId(req.params.id);
 
         if (laptopId === null) {
-            removeUploadedFiles(uploadedFiles);
-
             return res.status(400).json({
                 success: false,
                 message: 'Invalid laptop ID.'
@@ -63,8 +90,6 @@ const uploadLaptopImages = async (req, res) => {
                 primaryIndex >= uploadedFiles.length
             )
         ) {
-            removeUploadedFiles(uploadedFiles);
-
             return res.status(400).json({
                 success: false,
                 message: 'Invalid primary image selection.'
@@ -78,12 +103,18 @@ const uploadLaptopImages = async (req, res) => {
         });
 
         if (!laptop) {
-            removeUploadedFiles(uploadedFiles);
-
             return res.status(404).json({
                 success: false,
                 message: 'Laptop not found.'
             });
+        }
+
+        for (const file of uploadedFiles) {
+            const asset = await uploadToCloudinary(
+                file,
+                `liq-tecnnologies/laptops/${laptopId}`
+            );
+            uploadedAssets.push(asset);
         }
 
         await prisma.$transaction(async (tx) => {
@@ -112,15 +143,18 @@ const uploadLaptopImages = async (req, res) => {
             }
 
             await tx.laptopImage.createMany({
-                data: uploadedFiles.map((file, index) => ({
+                data: uploadedAssets.map((asset, index) => ({
                     laptop_id: laptopId,
-                    image_url: `/images/laptops/${file.filename}`,
+                    image_url: asset.secure_url,
+                    cloudinary_public_id: asset.public_id,
                     is_primary: primaryIndex !== null
                         ? index === primaryIndex
                         : !existingPrimary && index === 0
                 }))
             });
         });
+
+        recordsSaved = true;
 
         const images = await prisma.laptopImage.findMany({
             where: {
@@ -140,7 +174,9 @@ const uploadLaptopImages = async (req, res) => {
     } catch (error) {
         console.error('Image upload error:', error);
 
-        removeUploadedFiles(uploadedFiles);
+        if (!recordsSaved) {
+            await deleteCloudinaryAssets(uploadedAssets);
+        }
 
         return res.status(500).json({
             success: false,
@@ -294,6 +330,13 @@ const deleteLaptopImage = async (req, res) => {
             });
         }
 
+        if (image.cloudinary_public_id && !isConfigured) {
+            return res.status(503).json({
+                success: false,
+                message: 'Image storage is not configured on the server.'
+            });
+        }
+
         await prisma.$transaction(async (tx) => {
             // Delete the selected image record
             await tx.laptopImage.delete({
@@ -327,12 +370,18 @@ const deleteLaptopImage = async (req, res) => {
             }
         });
 
-        // Delete the actual image file from disk
-        const filename = path.basename(image.image_url);
-        const filePath = path.join(uploadDirectory, filename);
-
-        if (fs.existsSync(filePath)) {
-            fs.unlinkSync(filePath);
+        if (image.cloudinary_public_id) {
+            try {
+                await cloudinary.uploader.destroy(
+                    image.cloudinary_public_id,
+                    { resource_type: 'image' }
+                );
+            } catch (storageError) {
+                // The database record is already gone; log orphan cleanup for retry.
+                console.error('Cloudinary image cleanup failed:', storageError);
+            }
+        } else {
+            deleteLegacyLocalFile(image.image_url);
         }
 
         return res.status(200).json({

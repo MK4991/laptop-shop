@@ -43,10 +43,11 @@ model Laptop {
 }
 
 model LaptopImage {
-  image_id     BigInt   @id @default(autoincrement())
-  laptop_id    BigInt
-  image_url    String   @db.VarChar(255)
-  is_primary   Boolean  @default(false)
+  image_id              BigInt   @id @default(autoincrement())
+  laptop_id             BigInt
+  image_url             String   @db.VarChar(255)
+  cloudinary_public_id  String?  @db.VarChar(255)
+  is_primary            Boolean  @default(false)
 
   laptop       Laptop   @relation(fields: [laptop_id], references: [laptop_id], onDelete: Cascade)
 
