@@ -156,9 +156,9 @@ addLaptopForm.addEventListener('submit', async (event) => {
 
     laptopData.ram_capacity = Number(laptopData.ram_capacity);
     laptopData.storage_capacity = Number(laptopData.storage_capacity);
-    laptopData.screen_size = Number(laptopData.screen_size);
     laptopData.price = Number(laptopData.price);
     laptopData.quantity = Number(laptopData.quantity);
+    laptopData.specifications = window.readCustomSpecificationValues();
 
     // Remove image input from laptop data
     delete laptopData.images;
@@ -224,6 +224,21 @@ addLaptopForm.addEventListener('submit', async (event) => {
         submitBtn.textContent = 'Add Laptop';
     }
 });
+
+async function initializeAddLaptopForm() {
+    try {
+        const authResponse = await fetch('/api/auth/me');
+        if (!authResponse.ok) return window.location.assign('/admin/login');
+        await window.loadLaptopOptions();
+        await window.loadCustomSpecifications();
+    } catch (error) {
+        message.textContent = error.message;
+        message.className = 'error-message';
+        submitBtn.disabled = true;
+    }
+}
+
+initializeAddLaptopForm();
 
 // Clean up temporary preview URLs
 window.addEventListener('beforeunload', () => {

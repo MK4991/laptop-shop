@@ -5,7 +5,8 @@ const validateLaptop = [
     body('brand_name')
         .trim()
         .notEmpty()
-        .withMessage('Brand name is required'),
+        .isLength({ max: 50 })
+        .withMessage('Select a valid brand'),
 
     body('model')
         .trim()
@@ -40,17 +41,11 @@ const validateLaptop = [
         .withMessage('Price must be greater than zero'),
 
     body('condition')
-        .isIn(['New', 'Used'])
-        .withMessage('Condition must be New or Used'),
-
-    body('graphics_card')
+        .isString()
         .trim()
         .notEmpty()
-        .withMessage('Graphics card information is required'),
-
-    body('screen_size')
-        .isFloat({ min: 1 })
-        .withMessage('Screen size must be positive'),
+        .isLength({ max: 20 })
+        .withMessage('Select a valid condition'),
 
     body('quantity')
         .optional()
@@ -73,9 +68,7 @@ const validateLaptopUpdate = [
     body('storage_capacity').optional().isInt({ min: 1 }),
     body('storage_type').optional().isString().trim().notEmpty().isLength({ max: 30 }),
     body('price').optional().isFloat({ min: 0.01 }),
-    body('condition').optional().isIn(['New', 'Used']),
-    body('graphics_card').optional().isString().trim().notEmpty().isLength({ max: 100 }),
-    body('screen_size').optional().isFloat({ min: 1, max: 99.9 }),
+    body('condition').optional().isString().trim().notEmpty().isLength({ max: 20 }),
     body('quantity').optional().isInt({ min: 0 }),
     body('availability').optional().isIn(['Available', 'Unavailable', 'Sold'])
 ];

@@ -6,6 +6,10 @@
 // HTML elements
 const laptopGrid = document.getElementById('laptopGrid');
 const resultCount = document.getElementById('resultCount');
+const cataloguePagination = document.getElementById('cataloguePagination');
+const cataloguePageInfo = document.getElementById('cataloguePageInfo');
+const cataloguePrevious = document.getElementById('cataloguePrevious');
+const catalogueNext = document.getElementById('catalogueNext');
 
 const searchInput = document.getElementById('searchInput');
 const searchButton = document.getElementById('searchButton');
@@ -19,14 +23,15 @@ const storageTypeFilter = document.getElementById('storageTypeFilter');
 const minPrice = document.getElementById('minPrice');
 const maxPrice = document.getElementById('maxPrice');
 const conditionFilter = document.getElementById('conditionFilter');
-const gpuFilter = document.getElementById('gpuFilter');
-const screenSizeFilter = document.getElementById('screenSizeFilter');
+const customSpecificationFilters = document.getElementById('customSpecificationFilters');
 const sortFilter = document.getElementById('sortFilter');
 const clearFiltersButton = document.getElementById('clearFilters');
 
 
-// Store all laptops for filter options
-let allLaptops = [];
+let cataloguePage = 1;
+let catalogueTotalPages = 1;
+const cataloguePageSize = 25;
+let customFilterDefinitions = [];
 
 
 // ========================================
@@ -35,7 +40,7 @@ let allLaptops = [];
 
 async function loadAllLaptops() {
     try {
-        const response = await fetch('/api/laptops');
+        const response = await fetch('/api/laptops/filters');
 
         if (!response.ok) {
             throw new Error('Could not load laptops.');
@@ -43,12 +48,17 @@ async function loadAllLaptops() {
 
         const result = await response.json();
 
-        allLaptops = result.data || [];
+        populateBrandFilter(result.data.brands || []);
+        populateGenerationFilter(result.data.processorGenerations || []);
+        const customResponse = await fetch('/api/custom-specifications');
+        const customResult = await customResponse.json();
+        if (!customResponse.ok || !customResult.success) {
+            throw new Error(customResult.message || 'Could not load custom specification filters.');
+        }
+        customFilterDefinitions = customResult.data || [];
+        renderCustomSpecificationFilters();
 
-        populateBrandFilter();
-        populateGenerationFilter();
-
-        await loadFilteredLaptops();
+        await loadFilteredLaptops(1);
 
     } catch (error) {
         console.error(error);
@@ -63,22 +73,60 @@ async function loadAllLaptops() {
     }
 }
 
+function renderCustomSpecificationFilters() {
+    customSpecificationFilters.replaceChildren();
+    customFilterDefinitions.forEach((definition) => {
+        const group = document.createElement('div');
+        group.className = 'filter-group custom-filter-group';
+        const heading = document.createElement('h3');
+        heading.textContent = definition.name;
+        group.append(heading);
+
+        if (definition.input_type === 'number') {
+            const range = document.createElement('div');
+            range.className = 'custom-number-range';
+            [['min', 'Min'], ['max', 'Max']].forEach(([type, label]) => {
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.step = 'any';
+                input.dataset.specificationId = definition.specification_id;
+                input.dataset.rangeType = type;
+                input.placeholder = label;
+                input.setAttribute('aria-label', `${label} ${definition.name}`);
+                input.addEventListener('change', () => loadFilteredLaptops(1));
+                range.append(input);
+            });
+            group.append(range);
+        } else if (definition.input_type === 'select' || definition.input_type === 'boolean') {
+            const select = document.createElement('select');
+            select.dataset.specificationId = definition.specification_id;
+            select.add(new Option(`All ${definition.name}`, ''));
+            const values = definition.input_type === 'boolean' ? ['Yes', 'No'] : definition.options;
+            values.forEach((value) => select.add(new Option(value, value)));
+            select.addEventListener('change', () => loadFilteredLaptops(1));
+            group.append(select);
+        } else {
+            const input = document.createElement('input');
+            input.type = 'search';
+            input.dataset.specificationId = definition.specification_id;
+            input.placeholder = `Search ${definition.name}`;
+            input.setAttribute('aria-label', `Filter by ${definition.name}`);
+            input.addEventListener('input', () => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => loadFilteredLaptops(1), 400);
+            });
+            group.append(input);
+        }
+        customSpecificationFilters.append(group);
+    });
+}
+
 
 // ========================================
 // POPULATE BRAND FILTER
 // ========================================
 
-function populateBrandFilter() {
-    const brands = [
-        ...new Set(
-            allLaptops
-                .map(laptop => laptop.brand?.brand_name)
-                .filter(Boolean)
-        )
-    ];
-
-    brands.sort();
-
+function populateBrandFilter(brands) {
     brands.forEach(brand => {
         const option = document.createElement('option');
 
@@ -94,18 +142,7 @@ function populateBrandFilter() {
 // POPULATE PROCESSOR GENERATION FILTER
 // ========================================
 
-function populateGenerationFilter() {
-    const generations = [
-        ...new Set(
-            allLaptops
-                .map(laptop => laptop.processor_generation)
-                .filter(generation => generation !== null &&
-                    generation !== undefined)
-        )
-    ];
-
-    generations.sort((a, b) => a - b);
-
+function populateGenerationFilter(generations) {
     generations.forEach(generation => {
         const option = document.createElement('option');
 
@@ -164,13 +201,18 @@ function getFilterParameters() {
         params.set('condition', conditionFilter.value);
     }
 
-    if (gpuFilter.value.trim()) {
-        params.set('gpu', gpuFilter.value.trim());
-    }
-
-    if (screenSizeFilter.value) {
-        params.set('screen_size', screenSizeFilter.value);
-    }
+    customFilterDefinitions.forEach((definition) => {
+        const id = definition.specification_id;
+        if (definition.input_type === 'number') {
+            const min = customSpecificationFilters.querySelector(`[data-specification-id="${id}"][data-range-type="min"]`);
+            const max = customSpecificationFilters.querySelector(`[data-specification-id="${id}"][data-range-type="max"]`);
+            if (min?.value) params.set(`spec_min_${id}`, min.value);
+            if (max?.value) params.set(`spec_max_${id}`, max.value);
+        } else {
+            const control = customSpecificationFilters.querySelector(`[data-specification-id="${id}"]`);
+            if (control?.value.trim()) params.set(`spec_${id}`, control.value.trim());
+        }
+    });
 
     if (sortFilter.value) {
         params.set('sort', sortFilter.value);
@@ -184,7 +226,7 @@ function getFilterParameters() {
 // LOAD FILTERED LAPTOPS
 // ========================================
 
-async function loadFilteredLaptops() {
+async function loadFilteredLaptops(page = 1) {
     try {
         laptopGrid.innerHTML = `
             <p class="loading-message">
@@ -193,6 +235,9 @@ async function loadFilteredLaptops() {
         `;
 
         const params = getFilterParameters();
+        params.set('page', String(page));
+        params.set('per_page', String(cataloguePageSize));
+        params.set('available_only', 'true');
 
         const response = await fetch(
             `/api/laptops?${params.toString()}`
@@ -204,12 +249,9 @@ async function loadFilteredLaptops() {
 
         const result = await response.json();
 
-        const laptops = (result.data || []).filter(laptop =>
-            laptop.availability === 'Available' &&
-            Number(laptop.quantity) > 0
-        );
-
-        displayLaptops(laptops);
+        cataloguePage = result.pagination.page;
+        catalogueTotalPages = result.pagination.totalPages;
+        displayLaptops(result.data || [], result.pagination);
 
     } catch (error) {
         console.error(error);
@@ -230,11 +272,21 @@ async function loadFilteredLaptops() {
 // DISPLAY LAPTOPS
 // ========================================
 
-function displayLaptops(laptops) {
+function displayLaptops(laptops, pagination) {
     laptopGrid.innerHTML = '';
 
-    resultCount.textContent =
-        `${laptops.length} laptop${laptops.length !== 1 ? 's' : ''} found`;
+    const first = pagination.total === 0
+        ? 0
+        : ((pagination.page - 1) * pagination.perPage) + 1;
+    const last = first === 0 ? 0 : first + laptops.length - 1;
+    resultCount.textContent = pagination.total === 0
+        ? 'No laptops found'
+        : `Showing ${first}–${last} of ${pagination.total} laptops`;
+
+    cataloguePageInfo.textContent = `Page ${cataloguePage} of ${catalogueTotalPages}`;
+    cataloguePrevious.disabled = cataloguePage <= 1;
+    catalogueNext.disabled = cataloguePage >= catalogueTotalPages;
+    cataloguePagination.hidden = pagination.totalPages <= 1;
 
     if (laptops.length === 0) {
         laptopGrid.innerHTML = `
@@ -304,8 +356,7 @@ function createLaptopCard(laptop) {
     const specs = [
         `${laptop.processor_model}`,
         `${laptop.ram_capacity} GB RAM`,
-        `${laptop.storage_capacity} GB ${laptop.storage_type}`,
-        `${laptop.screen_size}" Display`
+        `${laptop.storage_capacity} GB ${laptop.storage_type}`
     ];
 
     specs.forEach(spec => {
@@ -361,13 +412,13 @@ searchInput.addEventListener('input', () => {
     clearTimeout(searchTimeout);
 
     searchTimeout = setTimeout(() => {
-        loadFilteredLaptops();
+        loadFilteredLaptops(1);
     }, 400);
 });
 
 searchButton.addEventListener('click', () => {
     clearTimeout(searchTimeout);
-    loadFilteredLaptops();
+    loadFilteredLaptops(1);
 });
 
 
@@ -385,24 +436,11 @@ const filterElements = [
     minPrice,
     maxPrice,
     conditionFilter,
-    screenSizeFilter,
     sortFilter
 ];
 
 filterElements.forEach(filter => {
-    filter.addEventListener('change', loadFilteredLaptops);
-});
-
-
-// Search graphics card as the customer types
-let gpuTimeout;
-
-gpuFilter.addEventListener('input', () => {
-    clearTimeout(gpuTimeout);
-
-    gpuTimeout = setTimeout(() => {
-        loadFilteredLaptops();
-    }, 400);
+    filter.addEventListener('change', () => loadFilteredLaptops(1));
 });
 
 
@@ -424,12 +462,21 @@ clearFiltersButton.addEventListener('click', () => {
     maxPrice.value = '';
 
     conditionFilter.value = '';
-    gpuFilter.value = '';
-    screenSizeFilter.value = '';
+    customSpecificationFilters.querySelectorAll('input, select').forEach((control) => {
+        control.value = '';
+    });
 
     sortFilter.value = 'newest';
 
-    loadFilteredLaptops();
+    loadFilteredLaptops(1);
+});
+
+cataloguePrevious.addEventListener('click', () => {
+    if (cataloguePage > 1) loadFilteredLaptops(cataloguePage - 1);
+});
+
+catalogueNext.addEventListener('click', () => {
+    if (cataloguePage < catalogueTotalPages) loadFilteredLaptops(cataloguePage + 1);
 });
 
 

@@ -20,6 +20,7 @@ const {
 
 // Public routes
 router.get('/', laptopController.getAllLaptops);
+router.get('/filters', laptopController.getLaptopFilterOptions);
 router.get('/:id', validateLaptopId, checkValidation, laptopController.getLaptopById);
 
 // Protected laptop management routes

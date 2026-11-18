@@ -60,8 +60,7 @@ function createLaptopCard(laptop) {
     const specs = [
         `${laptop.processor_brand} ${laptop.processor_model}`,
         `${laptop.ram_capacity} GB RAM`,
-        `${laptop.storage_capacity} GB ${laptop.storage_type}`,
-        `${laptop.screen_size}" Display`
+        `${laptop.storage_capacity} GB ${laptop.storage_type}`
     ];
 
     specs.forEach(spec => {
@@ -107,7 +106,7 @@ async function loadFeaturedLaptops() {
     featuredContainer.textContent = 'Loading laptops...';
 
     try {
-        const response = await fetch('/api/laptops');
+        const response = await fetch('/api/laptops?available_only=true&per_page=3&page=1');
         const result = await response.json();
 
         if (!response.ok) {
@@ -116,12 +115,7 @@ async function loadFeaturedLaptops() {
             );
         }
 
-        const availableLaptops = result.data
-            .filter(laptop =>
-                laptop.availability === 'Available' &&
-                Number(laptop.quantity) > 0
-            )
-            .slice(0, 3);
+        const availableLaptops = result.data || [];
 
         featuredContainer.innerHTML = '';
 

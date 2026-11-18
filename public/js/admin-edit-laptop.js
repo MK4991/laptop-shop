@@ -80,6 +80,14 @@ async function loadLaptop() {
             throw new Error('Laptop information not found.');
         }
 
+        await window.loadLaptopOptions({
+            brand_name: currentLaptop.brand?.brand_name || '',
+            processor_brand: currentLaptop.processor_brand,
+            storage_type: currentLaptop.storage_type,
+            condition: currentLaptop.condition
+        });
+        await window.loadCustomSpecifications(currentLaptop.specifications || []);
+
         // Fill in the form
         document.getElementById('brand_name').value =
             currentLaptop.brand?.brand_name || '';
@@ -108,12 +116,6 @@ async function loadLaptop() {
             'storage_type',
             currentLaptop.storage_type
         );
-
-        document.getElementById('graphics_card').value =
-            currentLaptop.graphics_card || '';
-
-        document.getElementById('screen_size').value =
-            currentLaptop.screen_size;
 
         setSelectValue(
             'condition',
@@ -173,13 +175,6 @@ editLaptopForm.addEventListener('submit', async (event) => {
     const storageType =
         document.getElementById('storage_type').value;
 
-    const graphicsCard =
-        document.getElementById('graphics_card').value.trim();
-
-    const screenSize = Number(
-        document.getElementById('screen_size').value
-    );
-
     const condition =
         document.getElementById('condition').value;
 
@@ -200,14 +195,11 @@ editLaptopForm.addEventListener('submit', async (event) => {
         !processorBrand ||
         !processorModel ||
         !storageType ||
-        !graphicsCard ||
         !condition ||
         !Number.isInteger(ram) ||
         ram <= 0 ||
         !Number.isInteger(storage) ||
         storage <= 0 ||
-        !Number.isFinite(screenSize) ||
-        screenSize <= 0 ||
         !Number.isFinite(price) ||
         price < 0 ||
         !Number.isInteger(quantity) ||
@@ -236,7 +228,7 @@ editLaptopForm.addEventListener('submit', async (event) => {
     }
 
     const updatedData = {
-        brand_id: currentLaptop.brand_id,
+        brand_name: document.getElementById('brand_name').value,
         model,
         processor_brand: processorBrand,
         processor_model: processorModel,
@@ -245,12 +237,11 @@ editLaptopForm.addEventListener('submit', async (event) => {
         ram_capacity: ram,
         storage_capacity: storage,
         storage_type: storageType,
-        graphics_card: graphicsCard,
-        screen_size: screenSize,
         condition,
         price,
         quantity,
-        availability
+        availability,
+        specifications: window.readCustomSpecificationValues()
     };
 
     try {

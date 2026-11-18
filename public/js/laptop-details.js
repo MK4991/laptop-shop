@@ -26,8 +26,6 @@ const processorGeneration = document.getElementById('processorGeneration');
 const ramCapacity = document.getElementById('ramCapacity');
 const storageCapacity = document.getElementById('storageCapacity');
 const storageType = document.getElementById('storageType');
-const graphicsCard = document.getElementById('graphicsCard');
-const screenSize = document.getElementById('screenSize');
 
 // Get laptop ID from the URL
 const laptopId = window.location.pathname.split('/').filter(Boolean).pop();
@@ -130,8 +128,24 @@ function displayLaptopDetails(laptop) {
     ramCapacity.textContent = `${laptop.ram_capacity} GB`;
     storageCapacity.textContent = `${laptop.storage_capacity} GB`;
     storageType.textContent = laptop.storage_type || 'Not specified';
-    graphicsCard.textContent = laptop.graphics_card || 'Not specified';
-    screenSize.textContent = `${laptop.screen_size} inches`;
+
+    const customSpecificationsSection = document.getElementById('customSpecificationsSection');
+    const customSpecificationsList = document.getElementById('customSpecificationsList');
+    const customSpecifications = Array.isArray(laptop.specifications)
+        ? laptop.specifications.filter((item) => item?.name && item?.value)
+        : [];
+    customSpecificationsList.replaceChildren();
+    customSpecifications.forEach((item) => {
+        const row = document.createElement('div');
+        row.className = 'specification-row';
+        const label = document.createElement('span');
+        label.textContent = item.name;
+        const value = document.createElement('strong');
+        value.textContent = item.value;
+        row.append(label, value);
+        customSpecificationsList.append(row);
+    });
+    customSpecificationsSection.hidden = customSpecifications.length === 0;
 
     // Display laptop images
     displayLaptopImages(laptop.images || []);

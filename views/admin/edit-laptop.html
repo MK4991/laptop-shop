@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Laptop | Admin</title>
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+    <title>Edit Laptop | LIQ TECHNOLOGIES Admin</title>
     <link rel="stylesheet" href="/css/admin-edit-laptop.css">
 </head>
 <body>
@@ -15,7 +16,7 @@
             <div class="brand">
                 <div class="brand-icon">L</div>
                 <div>
-                    <h2>LIQ TECH</h2>
+                    <h2>LIQ TECHNOLOGIES</h2>
                     <span>Admin Panel</span>
                 </div>
             </div>
@@ -94,12 +95,13 @@
 
                         <div class="form-group">
                             <label for="brand_name">Brand</label>
-                            <input
-                                type="text"
+                            <select
                                 id="brand_name"
-                                disabled
+                                required
                             >
-                            <small>Brand cannot be changed here.</small>
+                                <option value="">Loading configured brands...</option>
+                            </select>
+                            <small>Choose a brand from the configured options.</small>
                         </div>
 
                         <div class="form-group">
@@ -131,10 +133,6 @@
                         <div class="form-group">
                             <label for="processor_brand">Processor Brand <span>*</span></label>
                             <select id="processor_brand" required>
-                                <option value="Intel">Intel</option>
-                                <option value="AMD">AMD</option>
-                                <option value="Apple">Apple</option>
-                                <option value="Other">Other</option>
                             </select>
                         </div>
 
@@ -200,52 +198,21 @@
                         <div class="form-group">
                             <label for="storage_type">Storage Type <span>*</span></label>
                             <select id="storage_type" required>
-                                <option value="SSD">SSD</option>
-                                <option value="HDD">HDD</option>
-                                <option value="NVMe SSD">NVMe SSD</option>
-                                <option value="eMMC">eMMC</option>
                             </select>
                         </div>
 
                     </div>
                 </section>
 
-                <!-- Other Specifications -->
-                <section class="form-section">
-
+                <section class="form-section" id="customSpecificationsSection" hidden>
                     <div class="section-heading">
-                        <div class="section-icon">▧</div>
+                        <div class="section-icon">＋</div>
                         <div>
-                            <h3>Other Specifications</h3>
-                            <p>Update additional hardware information.</p>
+                            <h3>Additional Specifications</h3>
+                            <p>Update any optional specifications configured in settings.</p>
                         </div>
                     </div>
-
-                    <div class="form-grid">
-
-                        <div class="form-group">
-                            <label for="graphics_card">Graphics Card <span>*</span></label>
-                            <input
-                                type="text"
-                                id="graphics_card"
-                                placeholder="e.g. Intel Iris Xe"
-                                required
-                            >
-                        </div>
-
-                        <div class="form-group">
-                            <label for="screen_size">Screen Size (inches) <span>*</span></label>
-                            <input
-                                type="number"
-                                id="screen_size"
-                                min="1"
-                                step="0.1"
-                                placeholder="e.g. 15.6"
-                                required
-                            >
-                        </div>
-
-                    </div>
+                    <div id="customSpecificationFields" class="form-grid"></div>
                 </section>
 
                 <!-- Inventory -->
@@ -264,8 +231,6 @@
                         <div class="form-group">
                             <label for="condition">Condition <span>*</span></label>
                             <select id="condition" required>
-                                <option value="New">New</option>
-                                <option value="Used">Used</option>
                             </select>
                         </div>
 
@@ -329,12 +294,14 @@
             </form>
 
             <footer class="page-footer">
-                LIQ TECH Admin Panel · Inventory Management
+                LIQ TECHNOLOGIES Admin Panel · Inventory Management
             </footer>
 
         </main>
     </div>
 
+    <script src="/js/admin-laptop-options.js"></script>
+    <script src="/js/admin-custom-specifications.js"></script>
     <script src="/js/admin-edit-laptop.js"></script>
 
 </body>

@@ -10,6 +10,8 @@ const PrismaSessionStore = require('./config/prismaSessionStore');
 const prisma = require('./config/database');
 const laptopRoutes = require('./routes/laptopRoutes');
 const authRoutes = require('./routes/authRoutes');
+const optionRoutes = require('./routes/optionRoutes');
+const customSpecificationRoutes = require('./routes/customSpecificationRoutes');
 
 if (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 32) {
     throw new Error('SESSION_SECRET must be set and contain at least 32 characters.');
@@ -53,6 +55,8 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 // API routes
 app.use('/api/auth', authRoutes);
+app.use('/api/options', optionRoutes);
+app.use('/api/custom-specifications', customSpecificationRoutes);
 app.use('/api/laptops', laptopRoutes);
 
 // Homepage
@@ -94,6 +98,10 @@ app.get('/admin/manage-images/:id', (req, res) => {
 // Admin dashboard
 app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname, '../views/admin/dashboard.html'));
+});
+
+app.get('/admin/settings/options', (req, res) => {
+    res.sendFile(path.join(__dirname, '../views/admin/options.html'));
 });
 
 // Add laptop page

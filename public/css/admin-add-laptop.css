@@ -608,3 +608,6 @@ body {
         gap: 6px;
     }
 }
+.form-section[hidden] {
+    display: none !important;
+}

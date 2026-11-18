@@ -340,3 +340,14 @@ html[data-theme="dark"] {
 .telegram-button:hover {
     background: #168ac0;
 }
+.custom-specifications-section {
+    margin-top: 24px;
+}
+
+.custom-specifications-section[hidden] {
+    display: none;
+}
+
+.custom-specifications-section h3 {
+    margin-bottom: 12px;
+}

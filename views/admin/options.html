@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+    <title>Form Options | LIQ TECHNOLOGIES</title>
+    <link rel="stylesheet" href="/css/admin-dashboard.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-icon">L</div>
+                <div><h2>LIQ TECHNOLOGIES</h2><span>ADMIN PANEL</span></div>
+            </div>
+            <div class="sidebar-label">WORKSPACE</div>
+            <nav class="sidebar-nav">
+                <a href="/admin" class="nav-link"><span class="nav-icon">▦</span>Dashboard</a>
+                <a href="/admin#inventory" class="nav-link"><span class="nav-icon">▤</span>Laptop Inventory</a>
+                <a href="/admin/settings/options" class="nav-link active"><span class="nav-icon">⚙</span>Form Options</a>
+                <button class="nav-link" id="sidebarAddLaptopBtn"><span class="nav-icon">＋</span>Add New Laptop</button>
+            </nav>
+            <div class="sidebar-bottom">
+                <div class="sidebar-profile">
+                    <div class="profile-avatar">A</div>
+                    <div class="profile-info"><strong>Administrator</strong><span>Store Manager</span></div>
+                </div>
+                <button id="logoutBtn" class="sidebar-logout"><span>↪</span>Logout</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div><span class="breadcrumb">Workspace / Settings</span><h2>Form Options</h2></div>
+                <div class="topbar-right">
+                    <div class="admin-welcome"><span class="online-dot"></span><span id="adminUsername">Welcome, Admin</span></div>
+                    <div class="topbar-avatar">A</div>
+                </div>
+            </header>
+
+            <section class="dashboard-content">
+                <div class="welcome-section">
+                    <div>
+                        <span class="section-tag">STORE CONFIGURATION</span>
+                        <h1>Laptop Form Options</h1>
+                        <p>Manage the choices available when adding or editing laptops.</p>
+                    </div>
+                </div>
+                <p id="message" class="dashboard-message" role="status" aria-live="polite"></p>
+                <section class="inventory-section option-manager">
+                    <div class="inventory-header">
+                        <div>
+                            <span class="section-tag">SPECIFICATION SETTINGS</span>
+                            <h2>Available specifications</h2>
+                            <p>Select a specification to view and manage its options.</p>
+                        </div>
+                        <span class="inventory-label">FORM CONFIGURATION</span>
+                    </div>
+                    <div id="optionGrid" class="option-grid"></div>
+                </section>
+                <footer class="dashboard-footer">
+                    <span>LIQ TECHNOLOGIES Admin Panel</span><span>Store Configuration</span>
+                </footer>
+            </section>
+        </main>
+    </div>
+    <dialog id="optionActionDialog" class="confirmation-dialog" aria-labelledby="optionDialogTitle">
+        <div class="modal-content">
+            <div class="modal-icon"><span>!</span></div>
+            <h2 id="optionDialogTitle"></h2>
+            <p id="optionDialogMessage"></p>
+            <form method="dialog" class="modal-actions" id="optionDialogForm">
+                <div id="optionRenameField" class="modal-input-wrap" hidden>
+                    <label for="optionRenameInput">New name</label>
+                    <input id="optionRenameInput" type="text" maxlength="60" autocomplete="off">
+                </div>
+                <div class="modal-button-row">
+                    <button type="submit" value="cancel" class="modal-cancel">Cancel</button>
+                    <button type="submit" value="confirm" id="optionDialogConfirm" class="modal-delete">Delete</button>
+                </div>
+            </form>
+        </div>
+    </dialog>
+    <script src="/js/admin-options.js"></script>
+</body>
+</html>

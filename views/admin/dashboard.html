@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
 
-    <title>Dashboard | Laptop Store</title>
+    <title>Dashboard | LIQ TECHNOLOGIES</title>
 
     <link rel="stylesheet" href="/css/admin-dashboard.css">
 </head>
@@ -20,7 +21,7 @@
             <div class="sidebar-brand">
                 <div class="brand-icon">L</div>
                 <div>
-                    <h2>LIQ TECH</h2>
+                    <h2>LIQ TECHNOLOGIES</h2>
                     <span>ADMIN PANEL</span>
                 </div>
             </div>
@@ -36,6 +37,11 @@
                 <a href="#inventory" class="nav-link">
                     <span class="nav-icon">▤</span>
                     Laptop Inventory
+                </a>
+
+                <a href="/admin/settings/options" class="nav-link">
+                    <span class="nav-icon">⚙</span>
+                    Form Options
                 </a>
 
                 <button class="nav-link" id="sidebarAddLaptopBtn">
@@ -185,6 +191,14 @@
 
                     </div>
 
+                    <div class="inventory-pagination" id="inventoryPagination">
+                        <span id="inventoryPageInfo">Loading inventory pages...</span>
+                        <div class="pagination-buttons">
+                            <button type="button" id="inventoryPrevious" class="pagination-button" disabled>Previous</button>
+                            <button type="button" id="inventoryNext" class="pagination-button" disabled>Next</button>
+                        </div>
+                    </div>
+
                     <div class="table-footer">
                         <span>Inventory is updated from your database.</span>
                         <span class="secure-label">● Live inventory</span>
@@ -194,7 +208,7 @@
 
 
                 <footer class="dashboard-footer">
-                    <span>LIQ TECH Admin Panel</span>
+                    <span>LIQ TECHNOLOGIES Admin Panel</span>
                     <span>Inventory Management System</span>
                 </footer>
 

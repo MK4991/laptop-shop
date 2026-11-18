@@ -29,17 +29,67 @@ model Laptop {
   storage_type          String   @db.VarChar(30)
   price                 Decimal  @db.Decimal(15, 2)
   condition             String   @db.VarChar(20)
-  graphics_card         String   @db.VarChar(100)
-  screen_size           Decimal  @db.Decimal(4, 1)
   quantity              Int      @default(0)
   availability          String   @default("Available") @db.VarChar(20)
 
   brand                 Brand   @relation(fields: [brand_id], references: [brand_id])
+  processorBrandOption  ProcessorBrandOption @relation(fields: [processor_brand], references: [option_name], onDelete: Restrict, onUpdate: Cascade)
+  storageTypeOption     StorageTypeOption @relation(fields: [storage_type], references: [option_name], onDelete: Restrict, onUpdate: Cascade)
+  conditionOption       ConditionOption @relation(fields: [condition], references: [option_name], onDelete: Restrict, onUpdate: Cascade)
   images                LaptopImage[]
+  specifications        LaptopSpecification[]
 
     // Prevent duplicate laptop configurations
-  @@unique([brand_id, model, processor_brand, processor_model, processor_generation, ram_capacity, storage_capacity, storage_type, condition, graphics_card, screen_size], map: "laptop_configuration_unique")
+  @@unique([brand_id, model, processor_brand, processor_model, processor_generation, ram_capacity, storage_capacity, storage_type, condition], map: "laptop_configuration_unique")
   @@map("laptop")
+}
+
+model ProcessorBrandOption {
+  option_id   BigInt   @id @default(autoincrement())
+  option_name String   @unique @db.VarChar(30)
+  laptops     Laptop[]
+
+  @@map("processor_brand_option")
+}
+
+model StorageTypeOption {
+  option_id   BigInt   @id @default(autoincrement())
+  option_name String   @unique @db.VarChar(30)
+  laptops     Laptop[]
+
+  @@map("storage_type_option")
+}
+
+model ConditionOption {
+  option_id   BigInt   @id @default(autoincrement())
+  option_name String   @unique @db.VarChar(20)
+  laptops     Laptop[]
+
+  @@map("condition_option")
+}
+
+model CustomSpecification {
+  specification_id BigInt   @id @default(autoincrement())
+  name             String   @unique @db.VarChar(60)
+  input_type       String   @db.VarChar(20)
+  options          Json     @default("[]")
+  values           LaptopSpecification[]
+
+  @@map("custom_specification")
+}
+
+model LaptopSpecification {
+  laptop_id        BigInt
+  specification_id BigInt
+  value            String   @db.VarChar(250)
+  number_value     Float?
+
+  laptop Laptop @relation(fields: [laptop_id], references: [laptop_id], onDelete: Cascade)
+  specification CustomSpecification @relation(fields: [specification_id], references: [specification_id], onDelete: Restrict)
+
+  @@id([laptop_id, specification_id])
+  @@index([specification_id])
+  @@map("laptop_specification")
 }
 
 model LaptopImage {

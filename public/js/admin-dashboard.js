@@ -30,8 +30,14 @@ const totalUnitsElement =
 
 const unavailableModelsElement =
     document.getElementById('unavailableModels');
+const inventoryPageInfo = document.getElementById('inventoryPageInfo');
+const inventoryPrevious = document.getElementById('inventoryPrevious');
+const inventoryNext = document.getElementById('inventoryNext');
 
 let laptops = [];
+let inventoryPage = 1;
+let inventoryTotalPages = 1;
+const inventoryPageSize = 25;
 
 // Check whether admin is logged in
 async function checkAuthentication() {
@@ -58,37 +64,18 @@ async function checkAuthentication() {
 }
 
 // Update dashboard statistics
-function updateDashboardStatistics() {
-    const totalModels = laptops.length;
-
-    const availableModels = laptops.filter(
-        laptop =>
-            laptop.availability === 'Available' &&
-            Number(laptop.quantity) > 0
-    ).length;
-
-    const totalUnits = laptops.reduce(
-        (total, laptop) =>
-            total + Number(laptop.quantity),
-        0
-    );
-
-    const unavailableModels = laptops.filter(
-        laptop =>
-            laptop.availability !== 'Available' ||
-            Number(laptop.quantity) === 0
-    ).length;
-
-    totalModelsElement.textContent = totalModels;
-    availableModelsElement.textContent = availableModels;
-    totalUnitsElement.textContent = totalUnits;
-    unavailableModelsElement.textContent = unavailableModels;
+function updateDashboardStatistics(statistics) {
+    totalModelsElement.textContent = statistics.totalModels;
+    availableModelsElement.textContent = statistics.availableModels;
+    totalUnitsElement.textContent = statistics.totalUnits;
+    unavailableModelsElement.textContent = statistics.unavailableModels;
 }
 
 // Retrieve laptops from the API
-async function loadLaptops() {
+async function loadLaptops(page = inventoryPage) {
     try {
-        const response = await fetch('/api/laptops');
+        const requestedPage = Math.max(1, Number(page) || 1);
+        const response = await fetch(`/api/laptops?page=${requestedPage}&per_page=${inventoryPageSize}`);
         const result = await response.json();
 
         if (!response.ok) {
@@ -97,10 +84,24 @@ async function loadLaptops() {
             );
         }
 
-        laptops = result.data;
+        if (
+            result.pagination.total > 0 &&
+            requestedPage > result.pagination.totalPages
+        ) {
+            return loadLaptops(result.pagination.totalPages);
+        }
+
+        laptops = result.data || [];
+        inventoryPage = result.pagination.page;
+        inventoryTotalPages = result.pagination.totalPages;
 
         // Update statistics
-        updateDashboardStatistics();
+        updateDashboardStatistics(result.statistics);
+        inventoryPageInfo.textContent = result.pagination.total === 0
+            ? 'No laptop configurations'
+            : `Page ${inventoryPage} of ${inventoryTotalPages} · ${result.pagination.total} configurations`;
+        inventoryPrevious.disabled = inventoryPage <= 1;
+        inventoryNext.disabled = inventoryPage >= inventoryTotalPages;
 
         laptopTableBody.innerHTML = '';
 
@@ -157,6 +158,7 @@ async function loadLaptops() {
         `;
 
         console.error(error);
+        inventoryPageInfo.textContent = 'Could not load inventory pages.';
     }
 }
 
@@ -296,6 +298,14 @@ function openAddLaptopPage() {
 }
 
 addLaptopBtn.addEventListener('click', openAddLaptopPage);
+
+inventoryPrevious.addEventListener('click', () => {
+    if (inventoryPage > 1) loadLaptops(inventoryPage - 1);
+});
+
+inventoryNext.addEventListener('click', () => {
+    if (inventoryPage < inventoryTotalPages) loadLaptops(inventoryPage + 1);
+});
 
 sidebarAddLaptopBtn.addEventListener(
     'click',
