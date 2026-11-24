@@ -8,6 +8,8 @@ const togglePassword = document.getElementById('togglePassword');
 const loginButton = document.getElementById('loginButton');
 const buttonText = document.getElementById('buttonText');
 
+loadStoreProfile().catch((error) => console.error('Store profile error:', error));
+
 
 // Show or hide password
 togglePassword.addEventListener('click', () => {
@@ -34,7 +36,7 @@ loginForm.addEventListener('submit', async (event) => {
     buttonText.textContent = 'Signing in...';
 
     try {
-        const response = await fetch('/api/auth/login', {
+        const response = await fetch(storeApi('/auth/login'), {
             method: 'POST',
             credentials: 'same-origin',
             headers: {
@@ -49,7 +51,9 @@ loginForm.addEventListener('submit', async (event) => {
         const result = await response.json();
 
         if (response.ok) {
-            window.location.href = '/admin';
+            window.location.href = result.admin.mustChangePassword
+                ? storePath('/admin/change-password')
+                : storePath('/admin');
         } else {
             errorMessage.textContent =
                 result.message || 'Invalid username or password.';

@@ -20,7 +20,7 @@ function normalizeOptions(options) {
 
 const list = async (req, res) => {
     try {
-        const definitions = await prisma.customSpecification.findMany({ orderBy: { name: 'asc' } });
+        const definitions = await prisma.customSpecification.findMany({ where: { store_id: req.storeId }, orderBy: { name: 'asc' } });
         res.json({ success: true, data: definitions.map(formatSpecification) });
     } catch (error) {
         console.error(error);
@@ -40,7 +40,7 @@ const create = async (req, res) => {
     }
     try {
         const definition = await prisma.customSpecification.create({
-            data: { name, input_type: inputType, options }
+            data: { store_id: req.storeId, name, input_type: inputType, options }
         });
         res.status(201).json({ success: true, data: formatSpecification(definition) });
     } catch (error) {
@@ -57,7 +57,7 @@ const rename = async (req, res) => {
     }
     try {
         const definition = await prisma.customSpecification.update({
-            where: { specification_id: BigInt(req.params.id) }, data: { name }
+            where: { specification_id: BigInt(req.params.id), store_id: req.storeId }, data: { name }
         });
         res.json({ success: true, data: formatSpecification(definition) });
     } catch (error) {
@@ -71,7 +71,7 @@ const rename = async (req, res) => {
 const remove = async (req, res) => {
     if (!/^\d+$/.test(req.params.id)) return res.status(400).json({ success: false, message: 'Invalid specification ID.' });
     try {
-        await prisma.customSpecification.delete({ where: { specification_id: BigInt(req.params.id) } });
+        await prisma.customSpecification.delete({ where: { specification_id: BigInt(req.params.id), store_id: req.storeId } });
         res.json({ success: true, message: 'Custom specification deleted.' });
     } catch (error) {
         if (error.code === 'P2003' || error.code === 'P2014') return res.status(409).json({ success: false, message: 'This specification already has values on laptop listings and cannot be deleted.' });
@@ -85,10 +85,10 @@ function validId(id) {
     return /^\d{1,18}$/.test(id);
 }
 
-async function findSelectionSpecification(id) {
+async function findSelectionSpecification(id, storeId) {
     if (!validId(id)) return null;
-    const definition = await prisma.customSpecification.findUnique({
-        where: { specification_id: BigInt(id) }
+    const definition = await prisma.customSpecification.findFirst({
+        where: { specification_id: BigInt(id), store_id: storeId }
     });
     return definition?.input_type === 'select' ? definition : null;
 }
@@ -99,13 +99,13 @@ const addChoice = async (req, res) => {
         return res.status(400).json({ success: false, message: 'Enter a choice up to 50 characters long.' });
     }
     try {
-        const definition = await findSelectionSpecification(req.params.id);
+        const definition = await findSelectionSpecification(req.params.id, req.storeId);
         if (!definition) return res.status(404).json({ success: false, message: 'Selection-list specification not found.' });
         const options = Array.isArray(definition.options) ? definition.options : [];
         if (options.includes(option)) return res.status(409).json({ success: false, message: 'That choice already exists.' });
         if (options.length >= 30) return res.status(400).json({ success: false, message: 'A selection list can contain up to 30 choices.' });
         const updated = await prisma.customSpecification.update({
-            where: { specification_id: definition.specification_id },
+            where: { specification_id: definition.specification_id, store_id: req.storeId },
             data: { options: [...options, option] }
         });
         res.status(201).json({ success: true, data: formatSpecification(updated) });
@@ -123,8 +123,8 @@ const renameChoice = async (req, res) => {
     }
     try {
         const result = await prisma.$transaction(async (tx) => {
-            const definition = await tx.customSpecification.findUnique({
-                where: { specification_id: BigInt(req.params.id) }
+            const definition = await tx.customSpecification.findFirst({
+                where: { specification_id: BigInt(req.params.id), store_id: req.storeId }
             });
             if (!definition || definition.input_type !== 'select') return { error: 'missing' };
             const options = Array.isArray(definition.options) ? definition.options : [];
@@ -132,12 +132,12 @@ const renameChoice = async (req, res) => {
             if (oldOption !== newOption && options.includes(newOption)) return { error: 'duplicate' };
             if (oldOption !== newOption) {
                 await tx.laptopSpecification.updateMany({
-                    where: { specification_id: definition.specification_id, value: oldOption },
+                    where: { store_id: req.storeId, specification_id: definition.specification_id, value: oldOption },
                     data: { value: newOption }
                 });
             }
             const updated = await tx.customSpecification.update({
-                where: { specification_id: definition.specification_id },
+                where: { specification_id: definition.specification_id, store_id: req.storeId },
                 data: { options: options.map((item) => item === oldOption ? newOption : item) }
             });
             return { definition: updated };
@@ -159,18 +159,18 @@ const deleteChoice = async (req, res) => {
     }
     try {
         const result = await prisma.$transaction(async (tx) => {
-            const definition = await tx.customSpecification.findUnique({
-                where: { specification_id: BigInt(req.params.id) }
+            const definition = await tx.customSpecification.findFirst({
+                where: { specification_id: BigInt(req.params.id), store_id: req.storeId }
             });
             if (!definition || definition.input_type !== 'select') return { error: 'missing' };
             const options = Array.isArray(definition.options) ? definition.options : [];
             if (!options.includes(option)) return { error: 'missing-choice' };
             const usageCount = await tx.laptopSpecification.count({
-                where: { specification_id: definition.specification_id, value: option }
+                where: { store_id: req.storeId, specification_id: definition.specification_id, value: option }
             });
             if (usageCount > 0) return { error: 'in-use' };
             const updated = await tx.customSpecification.update({
-                where: { specification_id: definition.specification_id },
+                where: { specification_id: definition.specification_id, store_id: req.storeId },
                 data: { options: options.filter((item) => item !== option) }
             });
             return { definition: updated };

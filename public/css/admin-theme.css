@@ -1,0 +1,815 @@
+/* The public stylesheet sets these rules for storefront logos; admin pages
+   load separate stylesheets, so constrain the shared logo markup here too. */
+.brand-icon.has-store-logo,
+.brand-logo.has-store-logo {
+    flex: 0 0 auto;
+    overflow: hidden;
+    padding: 0;
+}
+
+.brand-icon .store-logo-image,
+.brand-logo .store-logo-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+body.admin-dark {
+    color-scheme: dark;
+    background: #0f172a !important;
+    color: #e5eaf2 !important;
+}
+
+body.admin-dark .admin-layout,
+body.admin-dark .page-layout,
+body.admin-dark .main-content,
+body.admin-dark .dashboard-content,
+body.admin-dark .page-content {
+    background: transparent;
+    color: #e5eaf2;
+}
+
+body.admin-dark .topbar,
+body.admin-dark .login-panel,
+body.admin-dark .inventory-section,
+body.admin-dark .stat-card,
+body.admin-dark .settings-card,
+body.admin-dark .laptop-form,
+body.admin-dark .form-intro,
+body.admin-dark .login-card,
+body.admin-dark .form-section,
+body.admin-dark .content-card,
+body.admin-dark .laptop-info-card,
+body.admin-dark .gallery-card,
+body.admin-dark .upload-area,
+body.admin-dark .image-gallery,
+body.admin-dark .form-card,
+body.admin-dark .image-card,
+body.admin-dark .upload-card,
+body.admin-dark .upload-panel,
+body.admin-dark .option-card,
+body.admin-dark .option-accordion,
+body.admin-dark .login-card,
+body.admin-dark .change-password-card,
+body.admin-dark .confirmation-dialog .modal-content {
+    background-color: #172033 !important;
+    border-color: #2b3850 !important;
+    color: #e5eaf2;
+}
+
+body.admin-dark .stat-card p,
+body.admin-dark .inventory-header p,
+body.admin-dark .welcome-section p,
+body.admin-dark .settings-card p,
+body.admin-dark .form-intro p,
+body.admin-dark .page-subtitle,
+body.admin-dark .breadcrumb,
+body.admin-dark .settings-subnav a,
+body.admin-dark .table-footer,
+body.admin-dark .store-profile-logo-controls small {
+    color: #9aa8bd;
+}
+
+body.admin-dark h1,
+body.admin-dark h2,
+body.admin-dark h3,
+body.admin-dark label,
+body.admin-dark legend,
+body.admin-dark th,
+body.admin-dark td,
+body.admin-dark .admin-welcome,
+body.admin-dark .login-heading,
+body.admin-dark .login-heading h1,
+body.admin-dark .login-panel h1,
+body.admin-dark .login-panel label,
+body.admin-dark .settings-card h2,
+body.admin-dark .option-summary,
+body.admin-dark .form-intro,
+body.admin-dark .page-heading {
+    color: #e5eaf2;
+}
+
+body.admin-dark input:not([type="checkbox"]):not([type="radio"]),
+body.admin-dark select,
+body.admin-dark textarea {
+    background-color: #101827 !important;
+    border-color: #34425a !important;
+    color: #e5eaf2 !important;
+}
+
+body.admin-dark input::placeholder,
+body.admin-dark textarea::placeholder {
+    color: #8190a6;
+}
+
+body.admin-dark .inventory-filters,
+body.admin-dark .inventory-filter-grid,
+body.admin-dark .inventory-filter-panel:not([hidden]),
+body.admin-dark .table-container,
+body.admin-dark table,
+body.admin-dark .option-content,
+body.admin-dark .option-list,
+body.admin-dark .custom-specification-list,
+body.admin-dark .settings-subnav {
+    background-color: #131d2e;
+    border-color: #2b3850;
+}
+
+body.admin-dark .inventory-filter-toggle {
+    border-color: #3a4963;
+    background: #202c40;
+    color: #d8e2f3;
+}
+
+body.admin-dark .inventory-filter-toggle:hover,
+body.admin-dark .inventory-filter-toggle[aria-expanded="true"],
+body.admin-dark .inventory-filter-toggle.has-active-filters {
+    border-color: #5973a0;
+    background: #253654;
+    color: #c5d5ff;
+}
+
+body.admin-dark .inventory-filter-panel:not([hidden]) {
+    border-color: #2b3850;
+}
+
+/* The inventory table has its own light row and control backgrounds. */
+body.admin-dark .table-container,
+body.admin-dark .table-container table,
+body.admin-dark .table-container thead,
+body.admin-dark .table-container tbody,
+body.admin-dark .table-container tr {
+    background: #172033 !important;
+}
+
+body.admin-dark .table-container th {
+    background: #202c40 !important;
+    color: #c8d4e6 !important;
+    border-color: #34425a !important;
+}
+
+body.admin-dark .table-container td {
+    background: #172033 !important;
+    color: #cbd5e1 !important;
+    border-color: #2b3850 !important;
+}
+
+body.admin-dark .table-container button,
+body.admin-dark .table-container a,
+body.admin-dark .inventory-filters button,
+body.admin-dark .inventory-pagination button {
+    border: 1px solid #3a4963 !important;
+    background: #253654 !important;
+    color: #d8e2f3 !important;
+}
+
+body.admin-dark .table-container button:hover,
+body.admin-dark .table-container a:hover,
+body.admin-dark .inventory-filters button:hover,
+body.admin-dark .inventory-pagination button:hover:not(:disabled) {
+    border-color: #5b74a0 !important;
+    background: #304362 !important;
+}
+
+body.admin-dark .table-container button[class*="delete"],
+body.admin-dark .table-container button[class*="danger"],
+body.admin-dark .table-container a[class*="delete"],
+body.admin-dark .table-container a[class*="danger"] {
+    border-color: #633f4a !important;
+    background: #432b35 !important;
+    color: #ffb8c1 !important;
+}
+
+body.admin-dark .inventory-pagination button:disabled {
+    opacity: 0.55;
+}
+
+body.admin-dark .option-accordion > summary:hover,
+body.admin-dark .option-accordion[open] > summary,
+body.admin-dark .custom-specification-summary:hover,
+body.admin-dark .custom-specification-row[open] > .custom-specification-summary {
+    background: #202e45;
+    color: #c8d7ff;
+}
+
+body.admin-dark .custom-specification-row {
+    border-color: #2b3850;
+    background: #172033;
+}
+
+body.admin-dark .option-accordion:hover,
+body.admin-dark .custom-specification-row:hover {
+    border-color: #506486;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+}
+
+body.admin-dark .custom-specification-info > span,
+body.admin-dark .custom-specification-expanded > small,
+body.admin-dark .option-empty {
+    color: #9aa8bd;
+}
+
+body.admin-dark .custom-choice-row {
+    border-color: #2b3850;
+    color: #d2d9e5;
+}
+
+body.admin-dark .option-list {
+    border-color: #2b3850;
+}
+
+body.admin-dark .option-actions button,
+body.admin-dark .specification-actions button {
+    border-color: #34496c;
+    background: #253654;
+    color: #c5d5ff;
+}
+
+body.admin-dark .option-actions button:hover,
+body.admin-dark .specification-actions button:hover {
+    border-color: #4d6590;
+    background: #304362;
+}
+
+body.admin-dark .option-actions button.danger,
+body.admin-dark .specification-actions button.danger {
+    border-color: #633f4a;
+    background: #432b35;
+    color: #ffb8c1;
+}
+
+body.admin-dark .option-actions button.danger:hover,
+body.admin-dark .specification-actions button.danger:hover {
+    border-color: #8a4c5b;
+    background: #57323f;
+}
+
+body.admin-dark .input-wrapper {
+    border-color: #34425a;
+    background: #101827;
+}
+
+body.admin-dark .input-wrapper input {
+    background: transparent !important;
+}
+
+body.admin-dark tr,
+body.admin-dark th,
+body.admin-dark td,
+body.admin-dark .option-row,
+body.admin-dark .image-list-item {
+    border-color: #2b3850 !important;
+}
+
+body.admin-dark .settings-subnav a:hover,
+body.admin-dark .settings-subnav a.active {
+    background: #253654;
+    color: #b9ccff;
+}
+
+body.admin-dark .store-profile-logo-preview,
+body.admin-dark .settings-card-icon {
+    background-color: #253654;
+    border-color: #34425a;
+    color: #c6d5ff;
+}
+
+body.admin-dark .stat-top {
+    color: #aab8ce;
+}
+
+body.admin-dark .stat-icon.blue {
+    background: #253654;
+    color: #9bbaff;
+}
+
+body.admin-dark .stat-icon.green {
+    background: #1d4037;
+    color: #72d5a1;
+}
+
+body.admin-dark .stat-icon.purple {
+    background: #382c52;
+    color: #c0a0ff;
+}
+
+body.admin-dark .stat-icon.orange {
+    background: #493728;
+    color: #ffc27b;
+}
+
+body.admin-dark .option-accordion-content > p {
+    color: #a3afc1;
+}
+
+body.admin-dark .store-social-manager {
+    border-color: #2b3850;
+}
+
+body.admin-dark .store-profile-location-fields {
+    border-color: #2b3850;
+    background: #131d2e;
+}
+
+body.admin-dark .store-profile-location-heading h3,
+body.admin-dark .store-profile-location-fields > label {
+    color: #e5eaf2;
+}
+
+body.admin-dark .store-profile-location-heading p,
+body.admin-dark .store-profile-location-fields small,
+body.admin-dark .field-optional {
+    color: #9aa8bd;
+}
+
+body.admin-dark .store-social-manager-heading h3 {
+    color: #e5eaf2;
+}
+
+body.admin-dark .store-social-manager-heading p,
+body.admin-dark .store-social-manager-heading > span {
+    color: #9aa8bd;
+}
+
+body.admin-dark .store-social-link-row {
+    border-color: #2b3850;
+    background: #131d2e;
+}
+
+body.admin-dark .store-social-link-row label {
+    color: #cbd5e1;
+}
+
+body.admin-dark .store-social-link-actions button,
+body.admin-dark .store-profile-form .secondary-btn {
+    border-color: #3a4963;
+    background: #202c40;
+    color: #d8e2f3;
+}
+
+body.admin-dark .store-social-link-actions button.remove-social-link {
+    border-color: #633f4a;
+    color: #ffb8c1;
+}
+
+.admin-theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 38px;
+    padding: 0 13px;
+    border: 1px solid #dce3ed;
+    border-radius: 9px;
+    background: #fff;
+    color: #334155;
+    font: 600 12px/1 Cambria, Georgia, serif;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+body > .admin-theme-toggle {
+    position: fixed;
+    z-index: 1000;
+    top: 18px;
+    right: 18px;
+}
+
+.admin-theme-toggle:hover {
+    border-color: #9eb5ec;
+    background: #f5f8ff;
+}
+
+.admin-theme-toggle:focus-visible {
+    outline: 3px solid rgba(53, 99, 233, 0.3);
+    outline-offset: 2px;
+}
+
+.mobile-admin-nav {
+    display: none;
+}
+
+body.admin-dark .admin-theme-toggle {
+    border-color: #3a4963;
+    background: #202c40;
+    color: #e5eaf2;
+}
+
+body.admin-dark .admin-theme-toggle:hover {
+    background: #2a3952;
+}
+
+@media (max-width: 600px) {
+    .admin-theme-toggle {
+        min-height: 34px;
+        padding: 0 10px;
+    }
+}
+
+@media (max-width: 700px) {
+    body.has-mobile-admin-nav {
+        padding-bottom: calc(78px + env(safe-area-inset-bottom));
+    }
+
+    body.has-mobile-admin-nav .sidebar-nav {
+        display: none !important;
+    }
+
+    body.has-mobile-admin-nav .admin-welcome,
+    body.has-mobile-admin-nav .topbar-avatar {
+        display: none !important;
+    }
+
+    body.has-mobile-admin-nav .topbar-right {
+        gap: 0;
+    }
+
+    body.has-mobile-admin-nav .admin-theme-toggle {
+        width: 38px;
+        min-width: 38px;
+        min-height: 38px;
+        padding: 0;
+        overflow: hidden;
+        font-size: 0;
+    }
+
+    body.has-mobile-admin-nav .admin-theme-toggle::before {
+        content: '☾';
+        font-size: 18px;
+    }
+
+    body.admin-dark.has-mobile-admin-nav .admin-theme-toggle::before {
+        content: '☀';
+    }
+
+    .mobile-admin-nav {
+        position: fixed;
+        z-index: 1500;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 2px;
+        padding: 7px 5px calc(7px + env(safe-area-inset-bottom));
+        border-top: 1px solid #e1e7f0;
+        background: rgba(255, 255, 255, 0.97);
+        box-shadow: 0 -5px 20px rgba(27, 42, 68, 0.08);
+        backdrop-filter: blur(14px);
+    }
+
+    .mobile-admin-nav-item {
+        display: flex;
+        min-width: 0;
+        min-height: 52px;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        padding: 5px 1px;
+        border: 0;
+        border-radius: 9px;
+        background: transparent;
+        color: #69778e;
+        font: 600 9px/1.15 Cambria, Georgia, serif;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .mobile-admin-nav-item[aria-current="page"] {
+        background: #edf3ff;
+        color: #2858bb;
+    }
+
+    .mobile-admin-nav-item:focus-visible {
+        outline: 2px solid #3978f6;
+        outline-offset: -2px;
+    }
+
+    .mobile-admin-nav-icon {
+        font-size: 17px;
+        line-height: 1;
+    }
+
+    .mobile-admin-logout {
+        color: #aa3e48;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin-bottom: 22px;
+    }
+
+    .stat-card {
+        min-width: 0;
+        min-height: 132px;
+        padding: 13px;
+    }
+
+    .stat-top {
+        gap: 6px;
+        font-size: 10px;
+    }
+
+    .stat-icon {
+        width: 30px;
+        height: 30px;
+        flex: 0 0 30px;
+        border-radius: 8px;
+        font-size: 15px;
+    }
+
+    .stat-card h2 {
+        margin-top: 10px;
+        font-size: 23px;
+    }
+
+    .stat-card p {
+        margin-top: 5px;
+        font-size: 9px;
+        line-height: 1.35;
+    }
+}
+
+@media (max-width: 380px) {
+    .mobile-admin-nav-item {
+        font-size: 8px;
+    }
+
+    .stat-card {
+        min-height: 126px;
+        padding: 11px;
+    }
+
+    .stat-top {
+        font-size: 9px;
+    }
+}
+
+body.admin-dark .mobile-admin-nav {
+    border-color: #2b3850;
+    background: rgba(18, 28, 44, 0.97);
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.25);
+}
+
+body.admin-dark .mobile-admin-nav-item {
+    color: #aab8ce;
+}
+
+body.admin-dark .mobile-admin-nav-item[aria-current="page"] {
+    background: #253654;
+    color: #c5d5ff;
+}
+
+body.admin-dark .mobile-admin-logout {
+    color: #ffb8c1;
+}
+
+@media (max-width: 420px) {
+    .inventory-filter-grid,
+    .inventory-custom-filters {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* MK TECH light palette shared by the store dashboard and admin forms. */
+body:not(.admin-dark) {
+    color-scheme: light;
+    background: #fbf6e8 !important;
+    color: #172d4a !important;
+    --navy: #142d4f;
+    --navy-light: #25466d;
+    --blue: #17365d;
+    --blue-light: #f5ecd2;
+    --background: #fbf6e8;
+    --text: #172d4a;
+    --muted: #64738a;
+    --border: #e7dcc0;
+    --white: #fffdf7;
+    --admin-yellow: #efc343;
+    --admin-yellow-hover: #e0b22f;
+}
+
+body:not(.admin-dark) .admin-layout,
+body:not(.admin-dark) .page-layout,
+body:not(.admin-dark) .main-content,
+body:not(.admin-dark) .dashboard-content,
+body:not(.admin-dark) .page-content {
+    background-color: transparent;
+    color: #172d4a;
+}
+
+body:not(.admin-dark) .sidebar {
+    background: #142d4f !important;
+}
+
+body:not(.admin-dark) .sidebar-brand .store-brand-name {
+    color: #fffdf7 !important;
+}
+
+body:not(.admin-dark) .sidebar .brand-icon:not(.has-store-logo),
+body:not(.admin-dark) .sidebar .profile-avatar,
+body:not(.admin-dark) .sidebar .topbar-avatar,
+body:not(.admin-dark) .admin-avatar,
+body:not(.admin-dark) .login-brand .brand-icon:not(.has-store-logo),
+body:not(.admin-dark) .brand-logo:not(.has-store-logo) {
+    background: #efc343 !important;
+    color: #142d4f !important;
+}
+
+body:not(.admin-dark) .sidebar-nav .nav-link:hover,
+body:not(.admin-dark) .sidebar-nav .nav-link.active,
+body:not(.admin-dark) .sidebar-nav a:hover,
+body:not(.admin-dark) .sidebar-nav a.active,
+body:not(.admin-dark) .sidebar-link:hover {
+    background: #25466d !important;
+    color: #fffdf7 !important;
+}
+
+body:not(.admin-dark) .sidebar-nav .nav-link.active,
+body:not(.admin-dark) .sidebar-nav a.active {
+    box-shadow: inset 3px 0 #efc343;
+    border-left-color: #efc343;
+}
+
+body:not(.admin-dark) .topbar,
+body:not(.admin-dark) .login-panel,
+body:not(.admin-dark) .inventory-section,
+body:not(.admin-dark) .stat-card,
+body:not(.admin-dark) .settings-card,
+body:not(.admin-dark) .laptop-form,
+body:not(.admin-dark) .form-intro,
+body:not(.admin-dark) .login-card,
+body:not(.admin-dark) .form-section,
+body:not(.admin-dark) .content-card,
+body:not(.admin-dark) .laptop-info-card,
+body:not(.admin-dark) .gallery-card,
+body:not(.admin-dark) .upload-area,
+body:not(.admin-dark) .image-gallery,
+body:not(.admin-dark) .form-card,
+body:not(.admin-dark) .image-card,
+body:not(.admin-dark) .upload-card,
+body:not(.admin-dark) .upload-panel,
+body:not(.admin-dark) .option-card,
+body:not(.admin-dark) .option-accordion,
+body:not(.admin-dark) .change-password-card,
+body:not(.admin-dark) .custom-specification-row,
+body:not(.admin-dark) .store-social-manager,
+body:not(.admin-dark) .store-profile-location-fields {
+    border-color: #e7dcc0 !important;
+    background-color: #fffdf7 !important;
+    color: #172d4a;
+}
+
+body:not(.admin-dark) .store-profile-location-fields,
+body:not(.admin-dark) .store-social-manager {
+    background-color: #fcf7ea !important;
+}
+
+body:not(.admin-dark) h1,
+body:not(.admin-dark) h2,
+body:not(.admin-dark) h3,
+body:not(.admin-dark) .welcome-section h1,
+body:not(.admin-dark) .topbar h2,
+body:not(.admin-dark) .page-heading h1,
+body:not(.admin-dark) .login-heading h1 {
+    color: #172d4a;
+}
+
+body:not(.admin-dark) .section-tag,
+body:not(.admin-dark) .form-tag,
+body:not(.admin-dark) .eyebrow,
+body:not(.admin-dark) .login-header .login-label {
+    color: #17365d !important;
+}
+
+body:not(.admin-dark) .primary-btn,
+body:not(.admin-dark) .submit-button,
+body:not(.admin-dark) .login-button,
+body:not(.admin-dark) .primary-button,
+body:not(.admin-dark) .option-add-form button {
+    border-color: #e0b22f !important;
+    background: #efc343 !important;
+    color: #142d4f !important;
+    box-shadow: 0 5px 13px rgba(156, 116, 13, 0.16);
+}
+
+body:not(.admin-dark) .primary-btn:hover,
+body:not(.admin-dark) .submit-button:hover,
+body:not(.admin-dark) .login-button:hover:not(:disabled),
+body:not(.admin-dark) .primary-button:hover,
+body:not(.admin-dark) .option-add-form button:hover {
+    background: #e0b22f !important;
+    color: #142d4f !important;
+}
+
+body:not(.admin-dark) .table-container,
+body:not(.admin-dark) .table-container table,
+body:not(.admin-dark) .table-container tbody,
+body:not(.admin-dark) .table-container tr,
+body:not(.admin-dark) .option-list,
+body:not(.admin-dark) .custom-specification-list,
+body:not(.admin-dark) .settings-subnav,
+body:not(.admin-dark) .inventory-filter-panel:not([hidden]),
+body:not(.admin-dark) .inventory-filters {
+    border-color: #e7dcc0;
+    background: #fffdf7;
+}
+
+body:not(.admin-dark) .table-container th {
+    border-color: #e1d5b6 !important;
+    background: #f1e7c9 !important;
+    color: #17365d !important;
+}
+
+body:not(.admin-dark) .table-container td {
+    border-color: #ece3cf !important;
+    background: #fffdf7 !important;
+    color: #263b58 !important;
+}
+
+body:not(.admin-dark) input:not([type="checkbox"]):not([type="radio"]),
+body:not(.admin-dark) select,
+body:not(.admin-dark) textarea {
+    border-color: #ded3b7;
+    background: #fffdf7;
+    color: #172d4a;
+}
+
+body:not(.admin-dark) input:focus,
+body:not(.admin-dark) select:focus,
+body:not(.admin-dark) textarea:focus {
+    border-color: #d7a916;
+    outline: 3px solid rgba(239, 195, 67, 0.25);
+}
+
+body:not(.admin-dark) .admin-theme-toggle {
+    border-color: #e2d6b9;
+    background: #fffdf7;
+    color: #17365d;
+}
+
+body:not(.admin-dark) .admin-theme-toggle:hover,
+body:not(.admin-dark) .mobile-admin-nav-item[aria-current="page"] {
+    border-color: #e0b22f;
+    background: #f8edc8;
+    color: #17365d;
+}
+
+body:not(.admin-dark) .mobile-admin-nav {
+    border-color: #e7dcc0;
+    background: rgba(255, 253, 247, 0.98);
+}
+
+body:not(.admin-dark) .mobile-admin-nav-item {
+    color: #64738a;
+}
+
+body:not(.admin-dark) .branding-panel {
+    background: linear-gradient(145deg, #142d4f, #25466d);
+}
+
+body:not(.admin-dark) .page-footer,
+body:not(.admin-dark) .dashboard-footer {
+    border-color: #e7dcc0;
+    color: #64738a;
+}
+
+body:not(.admin-dark) .quantity-adjuster {
+    border-color: #e7dcc0;
+    background: #fcf7ea;
+}
+
+body:not(.admin-dark) .quantity-adjust-btn {
+    background: #f1e7c9;
+    color: #17365d;
+}
+
+body:not(.admin-dark) .quantity-adjust-btn:hover:not(:disabled) {
+    background: #efc343;
+}
+
+body:not(.admin-dark) .quantity-adjust-value {
+    color: #172d4a;
+}
+
+body.admin-dark .quantity-adjuster {
+    border-color: #34445d;
+    background: #182438;
+}
+
+body.admin-dark .quantity-adjust-btn {
+    background: #263858;
+    color: #a9c1ff;
+}
+
+body.admin-dark .quantity-adjust-btn:hover:not(:disabled) {
+    background: #344b70;
+}
+
+body.admin-dark .quantity-adjust-value {
+    color: #f3f6fc;
+}

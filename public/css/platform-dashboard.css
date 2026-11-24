@@ -1,0 +1,105 @@
+
+:root { font-family: Cambria, Georgia, serif; color: #172033; background: #f5f7fb; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+button, input { font: inherit; }
+button { cursor: pointer; }
+.platform-layout { display: flex; min-height: 100vh; }
+.platform-sidebar { width: 255px; flex: 0 0 255px; display: flex; flex-direction: column; padding: 26px 18px; background: #111c35; color: #fff; }
+.platform-brand { display: flex; align-items: center; gap: 12px; padding: 0 8px 38px; color: inherit; text-decoration: none; }
+.platform-brand-icon { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 12px; background: #3978f6; color: #fff; font-weight: 800; font-size: 22px; }
+.platform-brand strong, .platform-brand small { display: block; }
+.platform-brand strong { font-size: 13px; letter-spacing: .5px; }
+.platform-brand small { margin-top: 5px; color: #8491aa; font-size: 9px; letter-spacing: 1.6px; }
+.platform-sidebar nav a { display: block; padding: 12px 14px; border-radius: 8px; color: #c4cde0; text-decoration: none; font-size: 13px; }
+.platform-sidebar nav a.active { background: #233657; color: #fff; box-shadow: inset 3px 0 #4a88ff; }
+.platform-sidebar-bottom { display: grid; gap: 12px; margin-top: auto; padding: 18px 8px 0; border-top: 1px solid #293650; color: #aebbd1; font-size: 12px; }
+.platform-quiet-button { width: 100%; padding: 10px 12px; border: 0; border-radius: 7px; background: transparent; color: inherit; text-align: left; }
+.platform-quiet-button:hover { background: #293650; }
+.platform-main { min-width: 0; flex: 1; }
+.platform-topbar { min-height: 85px; display: flex; align-items: center; justify-content: space-between; padding: 18px 38px; border-bottom: 1px solid #e9edf4; background: #fff; }
+.platform-topbar h1 { margin: 5px 0 0; font-size: 21px; }
+.platform-eyebrow { color: #3978f6; font-size: 10px; font-weight: 700; letter-spacing: 1.3px; }
+.platform-welcome, .platform-muted { color: #8993a5; font-size: 12px; }
+.platform-content { width: min(1400px, 100%); display: grid; gap: 22px; margin: 0 auto; padding: 30px 38px; }
+.platform-panel { min-width: 0; padding: 23px; border: 1px solid #e9edf4; border-radius: 12px; background: #fff; box-shadow: 0 3px 14px rgba(23, 32, 51, .035); }
+.platform-panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+.platform-panel-heading h2 { margin: 0; font-size: 17px; }
+.platform-panel-heading p, .platform-form-divider p { margin: 6px 0 0; color: #8993a5; font-size: 12px; }
+.platform-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 15px; }
+.platform-form-grid label, .platform-inline-form label { display: grid; gap: 7px; color: #5e6b80; font-size: 11px; font-weight: 600; }
+.platform-form-grid input, .platform-inline-form input { width: 100%; min-height: 39px; padding: 9px 11px; border: 1px solid #dfe5ef; border-radius: 7px; background: #fff; color: #26344b; font-size: 12px; }
+.platform-form-grid input:focus, .platform-inline-form input:focus { outline: 2px solid #c9dcff; border-color: #3978f6; }
+.platform-form-grid small { color: #8993a5; font-size: 10px; font-weight: 400; line-height: 1.5; }
+.platform-form-wide, .platform-form-divider, .platform-form-actions { grid-column: 1 / -1; }
+.platform-form-divider { padding-top: 5px; border-top: 1px solid #edf0f5; }
+.platform-form-divider h3 { margin: 13px 0 0; font-size: 13px; }
+.platform-form-actions { display: flex; justify-content: flex-end; }
+.platform-primary-button, .platform-secondary-button, .platform-danger-button { min-height: 38px; padding: 9px 14px; border: 1px solid transparent; border-radius: 7px; font-size: 11px; font-weight: 600; }
+.platform-primary-button { background: #3978f6; color: #fff; }
+.platform-primary-button:hover { background: #2866df; }
+.platform-secondary-button { border-color: #dfe5ef; background: #fff; color: #4b5b72; }
+.platform-secondary-button:hover { background: #f4f7fb; }
+.platform-danger-button { background: #cf3f3f; color: #fff; }
+.platform-message { min-height: 16px; margin: 8px 0; color: #16845b; font-size: 12px; }
+.platform-message.error { color: #c33f3f; }
+.platform-credential-notice { display: grid; gap: 8px; margin-top: 14px; padding: 14px; border: 1px solid #cce7d9; border-radius: 8px; background: #f1fbf5; color: #226647; font-size: 12px; overflow-wrap: anywhere; }
+.platform-credential-notice strong { font-size: 13px; }
+.platform-credential-notice code { padding: 8px; border-radius: 5px; background: #fff; font-size: 14px; }
+.platform-store-list { display: grid; gap: 12px; }
+.platform-store-card { overflow: hidden; border: 1px solid #e7ebf2; border-radius: 9px; }
+.platform-store-header { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding: 15px 17px; background: #fbfcff; }
+.platform-store-title { display: grid; gap: 5px; }
+.platform-store-title strong { font-size: 13px; }
+.platform-store-title small, .platform-store-meta { color: #8993a5; font-size: 11px; }
+.platform-store-header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.platform-status { padding: 5px 8px; border-radius: 20px; background: #e9f8ef; color: #16845b; font-size: 10px; font-weight: 700; }
+.platform-status.inactive { background: #fff0f0; color: #b53535; }
+.platform-store-details { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, .9fr); gap: 20px; padding: 17px; border-top: 1px solid #edf0f5; }
+.platform-store-details h3 { margin: 0 0 12px; font-size: 13px; }
+.platform-store-meta { display: grid; gap: 8px; }
+.platform-admin-list { display: grid; gap: 9px; }
+.platform-admin-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 0; border-bottom: 1px solid #edf0f5; font-size: 11px; }
+.platform-admin-row span { display: grid; gap: 4px; }
+.platform-admin-row small { color: #8993a5; }
+.platform-inline-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: end; gap: 9px; margin-top: 14px; }
+.platform-inline-form .platform-primary-button { grid-column: 1 / -1; justify-self: start; }
+.platform-store-credential { margin-top: 10px; padding: 10px; border-radius: 6px; background: #f1fbf5; color: #226647; font-size: 11px; overflow-wrap: anywhere; }
+.platform-dialog { width: min(420px, calc(100% - 32px)); margin: auto; padding: 24px; border: 0; border-radius: 14px; box-shadow: 0 20px 70px #0003; }
+.platform-dialog::backdrop { background: #0f192d99; }
+.platform-dialog-mark { width: 40px; height: 40px; display: grid; place-items: center; margin-bottom: 14px; border-radius: 50%; background: #fff0f0; color: #c33f3f; font-weight: 800; }
+.platform-dialog h2 { margin: 0; font-size: 17px; }
+.platform-dialog p { color: #68758a; font-size: 12px; line-height: 1.6; }
+.platform-dialog-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+.platform-login-page { min-height: 100vh; display: grid; place-items: center; padding: 20px; background: #f5f7fb; }
+.platform-login-card { width: min(420px, 100%); padding: 32px; border: 1px solid #e9edf4; border-radius: 14px; background: #fff; box-shadow: 0 12px 40px #17203312; }
+.platform-login-card h1 { margin: 7px 0; font-size: 23px; }
+.platform-login-card .platform-brand-icon { margin-bottom: 23px; }
+.platform-login-card form { display: grid; gap: 15px; margin-top: 22px; }
+.platform-login-card label { display: grid; gap: 7px; color: #5e6b80; font-size: 11px; font-weight: 600; }
+.platform-login-card input { min-height: 42px; padding: 10px; border: 1px solid #dfe5ef; border-radius: 7px; font-size: 13px; }
+.platform-login-card button { width: 100%; margin-top: 5px; }
+
+@media (max-width: 800px) {
+    .platform-sidebar { width: 210px; flex-basis: 210px; }
+    .platform-content { padding: 22px; }
+    .platform-topbar { padding: 16px 22px; }
+    .platform-store-details { grid-template-columns: 1fr; }
+}
+@media (max-width: 620px) {
+    .platform-layout { display: block; }
+    .platform-sidebar { width: 100%; padding: 14px; }
+    .platform-brand { padding: 0 5px 14px; }
+    .platform-sidebar nav { display: none; }
+    .platform-sidebar-bottom { display: flex; align-items: center; justify-content: space-between; margin-top: 0; padding: 10px 5px 0; }
+    .platform-quiet-button { width: auto; }
+    .platform-topbar { min-height: 70px; padding: 14px 17px; }
+    .platform-content { padding: 15px; }
+    .platform-panel { padding: 16px; }
+    .platform-form-grid { grid-template-columns: 1fr; }
+    .platform-form-wide, .platform-form-divider, .platform-form-actions { grid-column: auto; }
+    .platform-store-header { align-items: flex-start; flex-direction: column; }
+    .platform-store-header-actions { width: 100%; }
+    .platform-inline-form { grid-template-columns: 1fr; }
+    .platform-inline-form .platform-primary-button { grid-column: auto; }
+}

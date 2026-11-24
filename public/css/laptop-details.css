@@ -4,13 +4,14 @@
 ===================================== */
 
 :root {
-    --details-bg: #f5f7fc;
-    --details-card: #ffffff;
-    --details-soft: #f0f3fa;
-    --details-text: #172033;
-    --details-muted: #718096;
-    --details-border: #e1e7f0;
-    --details-blue: #5f88ff;
+    --details-bg: #fbf6e8;
+    --details-card: #fffdf7;
+    --details-soft: #f5ecd2;
+    --details-text: #172d4a;
+    --details-muted: #64738a;
+    --details-border: #e7dcc0;
+    --details-blue: #17365d;
+    --details-yellow: #efc343;
 }
 
 html[data-theme="dark"] {
@@ -21,6 +22,7 @@ html[data-theme="dark"] {
     --details-muted: #aab7cb;
     --details-border: #34445d;
     --details-blue: #6b91ff;
+    --details-yellow: #6b91ff;
 }
 
 .details-section {
@@ -246,8 +248,8 @@ html[data-theme="dark"] {
     display: inline-block;
     padding: 13px 21px;
     border-radius: 8px;
-    background: var(--details-blue);
-    color: #ffffff;
+    background: var(--details-yellow);
+    color: #172d4a;
     font-size: 13px;
     font-weight: 750;
     text-decoration: none;
@@ -255,7 +257,12 @@ html[data-theme="dark"] {
 }
 
 .back-button:hover {
-    opacity: 0.85;
+    background: #e0b22f;
+    opacity: 1;
+}
+
+html[data-theme="dark"] .back-button:hover {
+    background: #83a3ff;
 }
 
 

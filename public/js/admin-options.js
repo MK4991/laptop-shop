@@ -24,7 +24,10 @@ function showMessage(text, isError = false) {
 }
 
 async function api(url, options = {}) {
-    const response = await fetch(url, {
+    const apiUrl = url.startsWith('/api/')
+        ? storeApi(url.replace(/^\/api\/(?:options|custom-specifications)/, (path) => path.includes('options') ? '/options' : '/custom-specifications'))
+        : url;
+    const response = await fetch(apiUrl, {
         ...options,
         headers: { 'Content-Type': 'application/json', ...(options.headers || {}) }
     });
@@ -80,10 +83,7 @@ async function loadOptions() {
         summary.className = 'option-accordion-summary';
         const title = document.createElement('strong');
         title.textContent = category.title;
-        const count = document.createElement('span');
-        count.className = 'option-count';
-        count.textContent = String(entries.length);
-        summary.append(title, count);
+        summary.append(title);
         const content = document.createElement('div');
         content.className = 'option-accordion-content';
         const description = document.createElement('p');
@@ -176,10 +176,7 @@ async function loadOptions() {
     customSummary.className = 'option-accordion-summary';
     const customHeading = document.createElement('h2');
     customHeading.textContent = 'Custom specifications';
-    const customCount = document.createElement('span');
-    customCount.className = 'option-count';
-    customCount.textContent = String(customResult.data.length);
-    customSummary.append(customHeading, customCount);
+    customSummary.append(customHeading);
     const customContent = document.createElement('div');
     customContent.className = 'option-accordion-content';
     const customDescription = document.createElement('p');
@@ -188,19 +185,23 @@ async function loadOptions() {
     const customForm = document.createElement('form');
     customForm.className = 'option-add-form custom-specification-form';
     const customName = document.createElement('input');
+    customName.className = 'custom-specification-name';
     customName.type = 'text'; customName.maxLength = 60; customName.placeholder = 'Specification name'; customName.required = true;
     customName.setAttribute('aria-label', 'Custom specification name');
     const customType = document.createElement('select');
+    customType.className = 'custom-specification-type';
     customType.setAttribute('aria-label', 'Custom specification type');
     [
         ['text', 'Text'], ['number', 'Number'], ['boolean', 'Yes / No'], ['select', 'Selection list']
     ].forEach(([value, label]) => customType.add(new Option(label, value)));
     const customChoices = document.createElement('input');
+    customChoices.className = 'custom-specification-choices';
     customChoices.type = 'text'; customChoices.maxLength = 1500;
     customChoices.placeholder = 'Choices, separated by commas';
     customChoices.setAttribute('aria-label', 'Selection list choices');
     customChoices.hidden = true;
     const customAddButton = document.createElement('button');
+    customAddButton.className = 'custom-specification-submit';
     customAddButton.textContent = 'Add field';
     customType.addEventListener('change', () => {
         customChoices.hidden = customType.value !== 'select';
@@ -248,7 +249,56 @@ async function loadOptions() {
         const typeNames = { text: 'Text', number: 'Number', boolean: 'Yes / No', select: 'Selection list' };
         typeLabel.textContent = typeNames[specification.input_type] || specification.input_type;
         info.append(name, typeLabel);
-        rowSummary.append(info);
+        const specificationActions = document.createElement('div');
+        specificationActions.className = 'specification-actions';
+        specificationActions.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+        });
+
+        const rename = document.createElement('button');
+        rename.type = 'button';
+        rename.textContent = 'Rename';
+        rename.setAttribute('aria-label', `Rename specification ${specification.name}`);
+        rename.addEventListener('click', async () => {
+            const answer = await showOptionDialog({
+                title: 'Rename specification?',
+                message: `Choose a new name for “${specification.name}”. Saved laptop values will be preserved.`,
+                confirmLabel: 'Save changes',
+                initialValue: specification.name,
+                danger: false
+            });
+            if (!answer.confirmed || !answer.value || answer.value === specification.name) return;
+            try {
+                await api(`/api/custom-specifications/${specification.specification_id}`, {
+                    method: 'PATCH', body: JSON.stringify({ name: answer.value })
+                });
+                showMessage('Specification renamed. Existing laptop values are preserved.');
+                await loadOptions();
+            } catch (error) { showMessage(error.message, true); }
+        });
+
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.className = 'danger';
+        remove.textContent = 'Delete spec';
+        remove.setAttribute('aria-label', `Delete specification ${specification.name}`);
+        remove.addEventListener('click', async () => {
+            const answer = await showOptionDialog({
+                title: 'Delete specification?',
+                message: `Are you sure you want to delete “${specification.name}”? Specifications with saved laptop values cannot be deleted.`,
+                confirmLabel: 'Delete specification'
+            });
+            if (!answer.confirmed) return;
+            try {
+                await api(`/api/custom-specifications/${specification.specification_id}`, { method: 'DELETE' });
+                showMessage('Custom specification deleted.');
+                await loadOptions();
+            } catch (error) { showMessage(error.message, true); }
+        });
+
+        specificationActions.append(rename, remove);
+        rowSummary.append(info, specificationActions);
         const expandedDetails = document.createElement('div');
         expandedDetails.className = 'custom-specification-expanded';
         if (specification.input_type === 'select') {
@@ -350,44 +400,6 @@ async function loadOptions() {
             expandedDetails.append(typeDescription);
         }
 
-        const actions = document.createElement('div');
-        actions.className = 'option-actions';
-        const rename = document.createElement('button');
-        rename.type = 'button'; rename.textContent = 'Rename';
-        rename.addEventListener('click', async () => {
-            const answer = await showOptionDialog({
-                title: 'Rename specification?',
-                message: `Choose a new name for “${specification.name}”. Saved laptop values will be preserved.`,
-                confirmLabel: 'Save changes',
-                initialValue: specification.name,
-                danger: false
-            });
-            if (!answer.confirmed || !answer.value || answer.value === specification.name) return;
-            try {
-                await api(`/api/custom-specifications/${specification.specification_id}`, {
-                    method: 'PATCH', body: JSON.stringify({ name: answer.value })
-                });
-                showMessage('Specification renamed. Existing laptop values are preserved.');
-                await loadOptions();
-            } catch (error) { showMessage(error.message, true); }
-        });
-        const remove = document.createElement('button');
-        remove.type = 'button'; remove.className = 'danger'; remove.textContent = 'Delete';
-        remove.addEventListener('click', async () => {
-            const answer = await showOptionDialog({
-                title: 'Delete specification?',
-                message: `Are you sure you want to delete “${specification.name}”? Specifications with saved laptop values cannot be deleted.`,
-                confirmLabel: 'Delete specification'
-            });
-            if (!answer.confirmed) return;
-            try {
-                await api(`/api/custom-specifications/${specification.specification_id}`, { method: 'DELETE' });
-                showMessage('Custom specification deleted.');
-                await loadOptions();
-            } catch (error) { showMessage(error.message, true); }
-        });
-        actions.append(rename, remove);
-        expandedDetails.append(actions);
         row.append(rowSummary, expandedDetails);
         customList.append(row);
     });
@@ -399,9 +411,11 @@ async function loadOptions() {
 
 async function initialize() {
     try {
-        const auth = await fetch('/api/auth/me');
-        if (!auth.ok) return window.location.assign('/admin/login');
+        const auth = await fetch(storeApi('/auth/me'));
+        if (!auth.ok) return window.location.assign(storePath('/admin/login'));
         const authResult = await auth.json();
+        if (authResult.admin?.mustChangePassword) return window.location.assign(storePath('/admin/change-password'));
+        await loadStoreProfile();
         const username = authResult.admin?.username;
         if (username) document.getElementById('adminUsername').textContent = `Welcome, ${username}`;
         await loadOptions();
@@ -409,14 +423,14 @@ async function initialize() {
 }
 
 document.getElementById('sidebarAddLaptopBtn').addEventListener('click', () => {
-    window.location.assign('/admin/laptops/new');
+    window.location.assign(storePath('/admin/laptops/new'));
 });
 
 document.getElementById('logoutBtn').addEventListener('click', async () => {
     try {
-        await fetch('/api/auth/logout', { method: 'POST' });
+        await fetch(storeApi('/auth/logout'), { method: 'POST' });
     } finally {
-        window.location.assign('/admin/login');
+        window.location.assign(storePath('/admin/login'));
     }
 });
 

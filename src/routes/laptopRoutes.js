@@ -20,6 +20,7 @@ const {
 
 // Public routes
 router.get('/', laptopController.getAllLaptops);
+router.get('/admin/filters', requireAdmin, laptopController.getAdminLaptopFilterOptions);
 router.get('/filters', laptopController.getLaptopFilterOptions);
 router.get('/:id', validateLaptopId, checkValidation, laptopController.getLaptopById);
 

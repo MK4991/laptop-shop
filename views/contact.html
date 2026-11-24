@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Contact the store, find its address, and get directions.">
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+    <title>Contact Us | LIQ TECHNOLOGIES</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/mobile-responsive.css">
+    <script src="/js/theme.js" defer></script>
+    <script src="/js/store-context.js" defer></script>
+    <script src="/js/contact.js" defer></script>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container navbar">
+            <a href="/" data-store-route="" class="brand">
+                <span class="brand-icon">L</span>
+                <span class="store-brand-name">LIQ TECHNOLOGIES</span>
+            </a>
+            <nav class="main-nav" aria-label="Main navigation">
+                <a href="/" data-store-route="" class="nav-link">Home</a>
+                <a href="/laptops" data-store-route="/laptops" class="nav-link">Browse Laptops</a>
+                <a href="/contact" data-store-route="/contact" class="nav-link active contact-nav-link" hidden>Contact Us</a>
+            </nav>
+            <div class="nav-actions">
+                <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch theme" title="Toggle theme">
+                    <span id="themeIcon">☾</span>
+                </button>
+                <a href="/laptops" data-store-route="/laptops" class="nav-button">Explore Laptops</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="contact-page">
+        <section class="contact-page-intro">
+            <div class="container">
+                <span class="section-tag">CONTACT &amp; LOCATION</span>
+                <h1>We’re here to help</h1>
+                <p>Talk with our team, or visit our store. We look forward to helping you find the right laptop.</p>
+            </div>
+        </section>
+
+        <section class="container contact-page-content" aria-label="Store contact information">
+            <p id="contactPageLoading" class="contact-page-status" role="status">Loading store information…</p>
+            <p id="contactPageEmpty" class="contact-page-status" hidden>Contact details have not been added yet. Please check back soon.</p>
+
+            <div id="contactPageLayout" class="contact-page-layout" hidden>
+                <section id="contactDetailsCard" class="contact-details-card" aria-labelledby="contactDetailsHeading" hidden>
+                    <div class="contact-card-heading">
+                        <span class="section-tag">GET IN TOUCH</span>
+                        <h2 id="contactDetailsHeading">Contact <span class="store-brand-name">our store</span></h2>
+                    </div>
+                    <div class="contact-details-list">
+                        <div class="contact-detail-item" id="contactAddressItem" hidden>
+                            <span class="contact-detail-icon" aria-hidden="true">⌖</span>
+                            <div><span class="contact-detail-label">Store address</span><p class="store-contact-address contact-address-text"></p></div>
+                        </div>
+                        <a class="contact-detail-item store-contact-phone contact-page-method" aria-label="Call this store" hidden>
+                            <span class="contact-detail-icon" aria-hidden="true">☎</span>
+                            <span><span class="contact-detail-label">Call us</span><span class="contact-detail-value"></span></span>
+                        </a>
+                        <a class="contact-detail-item store-contact-email contact-page-method" aria-label="Email this store" hidden>
+                            <span class="contact-detail-icon" aria-hidden="true">✉</span>
+                            <span><span class="contact-detail-label">Email us</span><span class="contact-detail-value"></span></span>
+                        </a>
+                    </div>
+                </section>
+
+                <section id="contactLocationCard" class="contact-location-card" aria-labelledby="contactLocationHeading" hidden>
+                    <div class="contact-location-heading">
+                        <div><span class="section-tag">VISIT US</span><h2 id="contactLocationHeading">Find our store</h2></div>
+                        <a class="store-contact-map-link contact-map-button" target="_blank" rel="noopener noreferrer" hidden>Open in Maps <span aria-hidden="true">↗</span></a>
+                    </div>
+                    <p id="contactMapAddress" class="contact-map-address store-contact-address contact-address-text" hidden></p>
+                    <div id="contactMapFrameWrap" class="contact-map-frame-wrap" hidden>
+                        <iframe id="contactMapFrame" title="Map showing the store location" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+                    </div>
+                    <p id="contactMapFallback" class="contact-map-fallback" hidden>Use the map link above to open the store location and get directions.</p>
+                </section>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-content">
+            <a href="/" data-store-route="" class="brand footer-brand">
+                <span class="brand-icon">L</span>
+                <span class="store-brand-name">LIQ TECHNOLOGIES</span>
+            </a>
+            <p>Find the right laptop for your needs.</p>
+            <div class="store-social-links footer-social-links" aria-label="Store social media links" hidden></div>
+            <span class="copyright">© <span id="currentYear"></span> <span class="store-name-text">LIQ TECHNOLOGIES</span>. All rights reserved. <span class="platform-credit">Powered by MK TECH</span></span>
+        </div>
+    </footer>
+</body>
+</html>

@@ -7,7 +7,7 @@
     };
 
     window.loadLaptopOptions = async (selected = {}) => {
-        const response = await fetch('/api/options');
+        const response = await fetch(storeApi('/options'));
         const result = await response.json();
         if (!response.ok || !result.success) {
             throw new Error(result.message || 'Could not load configured options.');

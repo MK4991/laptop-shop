@@ -4,21 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
-    <title>Form Options | LIQ TECHNOLOGIES</title>
+    <title>Product Form Options | LIQ TECHNOLOGIES</title>
     <link rel="stylesheet" href="/css/admin-dashboard.css">
+    <link rel="stylesheet" href="/css/admin-theme.css">
+    <script src="/js/admin-theme.js" defer></script>
 </head>
 <body>
     <div class="admin-layout">
         <aside class="sidebar">
             <div class="sidebar-brand">
                 <div class="brand-icon">L</div>
-                <div><h2>LIQ TECHNOLOGIES</h2><span>ADMIN PANEL</span></div>
+                <div><h2 class="store-brand-name">LIQ TECHNOLOGIES</h2><span>ADMIN PANEL</span></div>
             </div>
             <div class="sidebar-label">WORKSPACE</div>
             <nav class="sidebar-nav">
-                <a href="/admin" class="nav-link"><span class="nav-icon">▦</span>Dashboard</a>
-                <a href="/admin#inventory" class="nav-link"><span class="nav-icon">▤</span>Laptop Inventory</a>
-                <a href="/admin/settings/options" class="nav-link active"><span class="nav-icon">⚙</span>Form Options</a>
+                <a href="/admin" data-store-route="/admin" class="nav-link"><span class="nav-icon">▦</span>Dashboard</a>
+                <a href="/admin#inventory" data-store-route="/admin#inventory" class="nav-link"><span class="nav-icon">▤</span>Laptop Inventory</a>
+                <a href="/admin/settings" data-store-route="/admin/settings" class="nav-link active"><span class="nav-icon">⚙</span>Settings</a>
                 <button class="nav-link" id="sidebarAddLaptopBtn"><span class="nav-icon">＋</span>Add New Laptop</button>
             </nav>
             <div class="sidebar-bottom">
@@ -32,7 +34,7 @@
 
         <main class="main-content">
             <header class="topbar">
-                <div><span class="breadcrumb">Workspace / Settings</span><h2>Form Options</h2></div>
+                <div><span class="breadcrumb">Workspace / Settings / Product Form Options</span><h2>Settings</h2></div>
                 <div class="topbar-right">
                     <div class="admin-welcome"><span class="online-dot"></span><span id="adminUsername">Welcome, Admin</span></div>
                     <div class="topbar-avatar">A</div>
@@ -40,10 +42,11 @@
             </header>
 
             <section class="dashboard-content">
+                <div class="settings-subnav"><a href="/admin/settings" data-store-route="/admin/settings">← All settings</a><a href="/admin/settings/profile" data-store-route="/admin/settings/profile">Store Profile</a><a class="active" href="/admin/settings/product-options" data-store-route="/admin/settings/product-options">Product Form Options</a></div>
                 <div class="welcome-section">
                     <div>
                         <span class="section-tag">STORE CONFIGURATION</span>
-                        <h1>Laptop Form Options</h1>
+                        <h1>Product Form Options</h1>
                         <p>Manage the choices available when adding or editing laptops.</p>
                     </div>
                 </div>
@@ -60,7 +63,7 @@
                     <div id="optionGrid" class="option-grid"></div>
                 </section>
                 <footer class="dashboard-footer">
-                    <span>LIQ TECHNOLOGIES Admin Panel</span><span>Store Configuration</span>
+                    <span class="store-admin-label">LIQ TECHNOLOGIES Admin Panel</span><span>Store Configuration</span>
                 </footer>
             </section>
         </main>
@@ -82,6 +85,7 @@
             </form>
         </div>
     </dialog>
+    <script src="/js/store-context.js"></script>
     <script src="/js/admin-options.js"></script>
 </body>
 </html>

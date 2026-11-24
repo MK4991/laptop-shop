@@ -4,14 +4,6 @@ const prisma = require('./database');
 class PrismaSessionStore extends session.Store {
     constructor() {
         super();
-
-        // Remove expired rows periodically instead of retaining abandoned sessions.
-        this.cleanupTimer = setInterval(() => {
-            prisma.adminSession.deleteMany({
-                where: { expires_at: { lte: new Date() } }
-            }).catch((error) => console.error('Session cleanup failed:', error));
-        }, 60 * 60 * 1000);
-        this.cleanupTimer.unref();
     }
 
     get(sid, callback) {

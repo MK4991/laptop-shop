@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+    <title>Settings | LIQ TECHNOLOGIES</title>
+    <link rel="stylesheet" href="/css/admin-dashboard.css">
+    <link rel="stylesheet" href="/css/admin-theme.css">
+    <script src="/js/admin-theme.js" defer></script>
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="sidebar">
+            <div class="sidebar-brand"><div class="brand-icon">L</div><div><h2 class="store-brand-name">LIQ TECHNOLOGIES</h2><span>ADMIN PANEL</span></div></div>
+            <div class="sidebar-label">WORKSPACE</div>
+            <nav class="sidebar-nav">
+                <a href="/admin" data-store-route="/admin" class="nav-link"><span class="nav-icon">▦</span>Dashboard</a>
+                <a href="/admin#inventory" data-store-route="/admin#inventory" class="nav-link"><span class="nav-icon">▤</span>Laptop Inventory</a>
+                <a href="/admin/settings" data-store-route="/admin/settings" class="nav-link active"><span class="nav-icon">⚙</span>Settings</a>
+                <button class="nav-link" id="sidebarAddLaptopBtn"><span class="nav-icon">＋</span>Add New Laptop</button>
+            </nav>
+            <div class="sidebar-bottom">
+                <div class="sidebar-profile"><div class="profile-avatar">A</div><div class="profile-info"><strong>Administrator</strong><span>Store Manager</span></div></div>
+                <button id="logoutBtn" class="sidebar-logout"><span>↪</span>Logout</button>
+            </div>
+        </aside>
+        <main class="main-content">
+            <header class="topbar">
+                <div><span class="breadcrumb">Workspace / Settings</span><h2>Settings</h2></div>
+                <div class="topbar-right"><div class="admin-welcome"><span class="online-dot"></span><span id="adminUsername">Welcome, Admin</span></div><div class="topbar-avatar">A</div></div>
+            </header>
+            <section class="dashboard-content">
+                <div class="welcome-section"><div><span class="section-tag">STORE CONFIGURATION</span><h1>Settings</h1><p>Manage your store identity and the product form choices available to administrators.</p></div></div>
+                <div class="settings-card-grid">
+                    <a class="settings-card" href="/admin/settings/profile" data-store-route="/admin/settings/profile">
+                        <span class="settings-card-icon">◉</span><span class="section-tag">STORE IDENTITY</span>
+                        <h2>Store Profile</h2><p>Update the store name and logo shown on your storefront.</p><span class="settings-card-action">Manage profile <span aria-hidden="true">→</span></span>
+                    </a>
+                    <a class="settings-card" href="/admin/settings/product-options" data-store-route="/admin/settings/product-options">
+                        <span class="settings-card-icon">☷</span><span class="section-tag">PRODUCT CATALOG</span>
+                        <h2>Product Form Options</h2><p>Manage brands, specifications, and choices used in laptop forms.</p><span class="settings-card-action">Manage options <span aria-hidden="true">→</span></span>
+                    </a>
+                </div>
+                <footer class="dashboard-footer"><span class="store-admin-label">LIQ TECHNOLOGIES Admin Panel</span><span>Store Settings</span></footer>
+            </section>
+        </main>
+    </div>
+    <script src="/js/store-context.js"></script>
+    <script src="/js/admin-settings.js"></script>
+</body>
+</html>

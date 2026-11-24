@@ -19,6 +19,7 @@ const getOptions = async (req, res) => {
     try {
         const lists = await Promise.all(Object.entries(optionTypes).map(async ([type, descriptor]) => {
             const records = await prisma[descriptor.model].findMany({
+                where: { store_id: req.storeId },
                 orderBy: { [descriptor.name]: 'asc' }
             });
             return [type, records.map((record) => normalize(record, descriptor))];
@@ -38,7 +39,7 @@ const createOption = async (req, res) => {
         return res.status(400).json({ success: false, message: `Enter a name between 1 and ${descriptor.max} characters.` });
     }
     try {
-        const record = await prisma[descriptor.model].create({ data: { [descriptor.name]: name } });
+        const record = await prisma[descriptor.model].create({ data: { store_id: req.storeId, [descriptor.name]: name } });
         res.status(201).json({ success: true, data: normalize(record, descriptor) });
     } catch (error) {
         if (error.code === 'P2002') return res.status(409).json({ success: false, message: 'That option already exists.' });
@@ -56,7 +57,7 @@ const renameOption = async (req, res) => {
     }
     try {
         const record = await prisma[descriptor.model].update({
-            where: { [descriptor.id]: BigInt(req.params.id) },
+            where: { [descriptor.id]: BigInt(req.params.id), store_id: req.storeId },
             data: { [descriptor.name]: name }
         });
         res.json({ success: true, data: normalize(record, descriptor) });
@@ -72,7 +73,7 @@ const deleteOption = async (req, res) => {
     const descriptor = getType(req.params.type);
     if (!descriptor) return res.status(404).json({ success: false, message: 'Option category not found.' });
     try {
-        await prisma[descriptor.model].delete({ where: { [descriptor.id]: BigInt(req.params.id) } });
+        await prisma[descriptor.model].delete({ where: { [descriptor.id]: BigInt(req.params.id), store_id: req.storeId } });
         res.json({ success: true, message: 'Option deleted.' });
     } catch (error) {
         if (error.code === 'P2003') return res.status(409).json({ success: false, message: 'This option is used by laptop listings. Reassign those listings before deleting it.' });

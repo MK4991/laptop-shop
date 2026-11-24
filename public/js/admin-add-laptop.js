@@ -116,7 +116,7 @@ async function uploadLaptopImages(laptopId) {
     );
 
     const response = await fetch(
-        `/api/laptops/${laptopId}/images`,
+        storeApi(`/laptops/${laptopId}/images`),
         {
             method: 'POST',
             credentials: 'same-origin',
@@ -168,7 +168,7 @@ addLaptopForm.addEventListener('submit', async (event) => {
         submitBtn.textContent = 'Saving laptop...';
 
         // Step 1: Create laptop listing
-        const response = await fetch('/api/laptops', {
+        const response = await fetch(storeApi('/laptops'), {
             method: 'POST',
             credentials: 'same-origin',
             headers: {
@@ -227,8 +227,10 @@ addLaptopForm.addEventListener('submit', async (event) => {
 
 async function initializeAddLaptopForm() {
     try {
-        const authResponse = await fetch('/api/auth/me');
-        if (!authResponse.ok) return window.location.assign('/admin/login');
+        const [authResponse] = await Promise.all([fetch(storeApi('/auth/me')), loadStoreProfile()]);
+        if (!authResponse.ok) return window.location.assign(storePath('/admin/login'));
+        const authResult = await authResponse.json();
+        if (authResult.admin?.mustChangePassword) return window.location.assign(storePath('/admin/change-password'));
         await window.loadLaptopOptions();
         await window.loadCustomSpecifications();
     } catch (error) {

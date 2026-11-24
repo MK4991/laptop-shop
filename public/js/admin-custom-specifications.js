@@ -30,7 +30,7 @@
     }
 
     window.loadCustomSpecifications = async (savedValues = []) => {
-        const response = await fetch('/api/custom-specifications');
+        const response = await fetch(storeApi('/custom-specifications'));
         const result = await response.json();
         if (!response.ok || !result.success) {
             throw new Error(result.message || 'Could not load custom specifications.');

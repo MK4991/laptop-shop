@@ -5,14 +5,16 @@
 ========================================= */
 
 :root {
-    --cat-bg: #f5f7fc;
-    --cat-surface: #ffffff;
-    --cat-surface-soft: #f0f3fa;
-    --cat-text: #172033;
-    --cat-muted: #718096;
-    --cat-border: #e1e7f0;
-    --cat-blue: #5f88ff;
-    --cat-blue-hover: #4773ed;
+    --cat-bg: #fbf6e8;
+    --cat-surface: #fffdf7;
+    --cat-surface-soft: #f5ecd2;
+    --cat-text: #172d4a;
+    --cat-muted: #64738a;
+    --cat-border: #e7dcc0;
+    --cat-blue: #17365d;
+    --cat-blue-hover: #294a70;
+    --cat-yellow: #efc343;
+    --cat-yellow-hover: #e0b22f;
     --cat-shadow: 0 8px 30px rgba(20, 35, 60, 0.06);
 }
 
@@ -25,6 +27,8 @@ html[data-theme="dark"] {
     --cat-border: #34445d;
     --cat-blue: #6b91ff;
     --cat-blue-hover: #83a3ff;
+    --cat-yellow: #6b91ff;
+    --cat-yellow-hover: #83a3ff;
     --cat-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
 }
 
@@ -49,11 +53,15 @@ html[data-theme="dark"] {
     padding: 8px 15px;
     margin-bottom: 17px;
     border-radius: 30px;
-    background: rgba(95, 136, 255, 0.13);
+    background: rgba(239, 195, 67, 0.2);
     color: var(--cat-blue);
     font-size: 11px;
     font-weight: 800;
     letter-spacing: 1.5px;
+}
+
+html[data-theme="dark"] .catalogue-heading .section-tag {
+    background: rgba(95, 136, 255, 0.13);
 }
 
 .catalogue-heading h1 {
@@ -114,8 +122,8 @@ html[data-theme="dark"] {
     padding: 13px 23px;
     border: none;
     border-radius: 8px;
-    background: var(--cat-blue);
-    color: #ffffff;
+    background: var(--cat-yellow);
+    color: #172d4a;
     font-size: 13px;
     font-weight: 700;
     cursor: pointer;
@@ -123,7 +131,7 @@ html[data-theme="dark"] {
 }
 
 .catalogue-search button:hover {
-    background: var(--cat-blue-hover);
+    background: var(--cat-yellow-hover);
 }
 
 
@@ -157,6 +165,7 @@ html[data-theme="dark"] {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 10px;
     padding-bottom: 19px;
     margin-bottom: 21px;
     border-bottom: 1px solid var(--cat-border);
@@ -169,13 +178,77 @@ html[data-theme="dark"] {
 }
 
 .filter-header button {
-    padding: 5px 0;
+    min-height: 34px;
+    padding: 7px 11px;
     border: none;
+    border-radius: 8px;
     background: transparent;
-    color: var(--cat-blue);
+    color: var(--cat-muted);
     font-size: 12px;
     font-weight: 700;
     cursor: pointer;
+    transition: color 0.18s ease, background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.filter-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.filter-header .customer-filter-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 12px;
+    border: 1px solid var(--cat-blue);
+    border-radius: 999px;
+    background: var(--cat-blue);
+    color: #fffdf7;
+    box-shadow: 0 4px 12px rgba(23, 54, 93, 0.16);
+}
+
+.filter-header .customer-filter-toggle:hover {
+    border-color: var(--cat-blue-hover);
+    background: var(--cat-blue-hover);
+    color: #fffdf7;
+    transform: translateY(-1px);
+}
+
+.filter-header #clearFilters {
+    color: var(--cat-blue);
+    background: var(--cat-surface-soft);
+}
+
+.filter-header #clearFilters::before {
+    content: "↺";
+    margin-right: 5px;
+    font-size: 14px;
+}
+
+.filter-header #clearFilters:hover {
+    background: var(--cat-surface-soft);
+    transform: translateY(-1px);
+}
+
+.filter-header button:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--cat-yellow) 65%, transparent);
+    outline-offset: 2px;
+}
+
+.customer-filter-toggle-icon {
+    display: inline-grid;
+    width: 18px;
+    height: 18px;
+    place-items: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.16);
+    font-size: 15px;
+    line-height: 1;
+}
+
+.customer-filter-controls[hidden] {
+    display: none !important;
 }
 
 .filter-group {
@@ -425,8 +498,8 @@ html[data-theme="dark"] {
     display: inline-block;
     padding: 10px 12px;
     border-radius: 7px;
-    background: var(--cat-blue);
-    color: #ffffff;
+    background: var(--cat-yellow);
+    color: #172d4a;
     font-size: 11px;
     font-weight: 700;
     text-decoration: none;
@@ -435,7 +508,7 @@ html[data-theme="dark"] {
 }
 
 .catalogue-grid .product-button:hover {
-    background: var(--cat-blue-hover);
+    background: var(--cat-yellow-hover);
 }
 
 

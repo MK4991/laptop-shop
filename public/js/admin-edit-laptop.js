@@ -5,9 +5,9 @@ const updateBtn = document.getElementById('updateBtn');
 const backBtn = document.getElementById('backBtn');
 const cancelBtn = document.getElementById('cancelBtn');
 
-// Read the ID from /admin/laptops/:id/edit.
+// Read the ID from /s/:slug/admin/laptops/:id/edit.
 const laptopId = window.location.pathname.match(
-    /^\/admin\/laptops\/(\d+)\/edit\/?$/
+    /^\/s\/[^/]+\/admin\/laptops\/(\d+)\/edit\/?$/
 )?.[1];
 
 // Store the original laptop information
@@ -48,18 +48,24 @@ function setSelectValue(elementId, value) {
 // Check admin authentication
 async function checkAuthentication() {
     try {
-        const response = await fetch('/api/auth/me');
+        const response = await fetch(storeApi('/auth/me'));
 
         if (!response.ok) {
-            window.location.href = '/admin/login';
+            window.location.href = storePath('/admin/login');
             return false;
         }
 
+        const result = await response.json();
+        if (result.admin?.mustChangePassword) {
+            window.location.href = storePath('/admin/change-password');
+            return false;
+        }
+        await loadStoreProfile();
         return true;
 
     } catch (error) {
         console.error(error);
-        window.location.href = '/admin/login';
+        window.location.href = storePath('/admin/login');
         return false;
     }
 }
@@ -67,7 +73,7 @@ async function checkAuthentication() {
 // Load laptop information
 async function loadLaptop() {
     try {
-        const response = await fetch(`/api/laptops/${laptopId}`);
+        const response = await fetch(storeApi(`/laptops/${laptopId}`));
         const result = await response.json();
 
         if (!response.ok) {
@@ -250,7 +256,7 @@ editLaptopForm.addEventListener('submit', async (event) => {
 
         showMessage('');
 
-        const response = await fetch(`/api/laptops/${laptopId}`, {
+        const response = await fetch(storeApi(`/laptops/${laptopId}`), {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -270,7 +276,7 @@ editLaptopForm.addEventListener('submit', async (event) => {
 
         // Return to dashboard after successful update
         setTimeout(() => {
-            window.location.href = '/admin';
+            window.location.href = storePath('/admin');
         }, 1200);
 
     } catch (error) {
@@ -284,7 +290,7 @@ editLaptopForm.addEventListener('submit', async (event) => {
 
 // Back and Cancel buttons
 function returnToDashboard() {
-    window.location.href = '/admin';
+    window.location.href = storePath('/admin');
 }
 
 backBtn.addEventListener('click', returnToDashboard);

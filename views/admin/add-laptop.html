@@ -7,6 +7,8 @@
     <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
     <title>Add Laptop | LIQ TECHNOLOGIES Admin</title>
     <link rel="stylesheet" href="/css/admin-add-laptop.css">
+    <link rel="stylesheet" href="/css/admin-theme.css">
+    <script src="/js/admin-theme.js" defer></script>
 </head>
 <body>
 
@@ -16,21 +18,25 @@
             <div class="brand">
                 <div class="brand-icon">L</div>
                 <div>
-                    <h2>LIQ TECHNOLOGIES</h2>
+                    <h2 class="store-brand-name">LIQ TECHNOLOGIES</h2>
                     <span>Admin Panel</span>
                 </div>
             </div>
 
             <nav class="sidebar-nav">
-                <a href="/admin">
+                <a href="/admin" data-store-route="/admin">
                     <span class="nav-icon">⌂</span>
                     Dashboard
                 </a>
-                <a href="/admin#inventory">
+                <a href="/admin#inventory" data-store-route="/admin#inventory">
                     <span class="nav-icon">▤</span>
                     Laptop Inventory
                 </a>
-                <a href="/admin/laptops/new" class="active">
+                <a href="/admin/settings" data-store-route="/admin/settings">
+                    <span class="nav-icon">⚙</span>
+                    Settings
+                </a>
+                <a href="/admin/laptops/new" data-store-route="/admin/laptops/new" class="active">
                     <span class="nav-icon">＋</span>
                     Add New Laptop
                 </a>
@@ -56,7 +62,7 @@
                     </p>
                 </div>
 
-                <a href="/admin" class="back-button">
+                <a href="/admin" data-store-route="/admin" class="back-button">
                     ← Back to Dashboard
                 </a>
             </header>
@@ -192,7 +198,7 @@
                         <div class="form-group">
                             <label for="price">Price (ETB) <span>*</span></label>
                             <input type="number" id="price" name="price"
-                                min="0.01" step="0.01"
+                                min="0" step="100"
                                 placeholder="e.g. 45000" required>
                         </div>
 
@@ -241,7 +247,7 @@
                 <div id="message"></div>
 
                 <div class="form-footer">
-                    <a href="/admin" class="cancel-button">Cancel</a>
+                    <a href="/admin" data-store-route="/admin" class="cancel-button">Cancel</a>
                     <button type="submit" id="submitBtn" class="submit-button">
                         Add Laptop to Inventory
                         <span>→</span>
@@ -251,12 +257,13 @@
             </form>
 
             <footer class="page-footer">
-                LIQ TECHNOLOGIES Admin Panel · Inventory Management
+                <span class="store-admin-label">LIQ TECHNOLOGIES Admin Panel</span> · Inventory Management
             </footer>
 
         </main>
     </div>
 
+    <script src="/js/store-context.js"></script>
     <script src="/js/admin-laptop-options.js"></script>
     <script src="/js/admin-custom-specifications.js"></script>
     <script src="/js/admin-add-laptop.js"></script>

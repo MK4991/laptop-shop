@@ -37,7 +37,8 @@ const laptopId = window.location.pathname.split('/').filter(Boolean).pop();
 
 async function loadLaptopDetails() {
     try {
-        const response = await fetch(`/api/laptops/${encodeURIComponent(laptopId)}`);
+        await loadStoreProfile();
+        const response = await fetch(storeApi(`/laptops/${encodeURIComponent(laptopId)}`));
 
         const result = await response.json();
 
@@ -82,9 +83,16 @@ function displayLaptopDetails(laptop) {
     // Telegram contact button
     const telegramButton = document.createElement('a');
 
-    telegramButton.href = 'https://t.me/asdfghjkl918273';
-    telegramButton.target = '_blank';
-    telegramButton.rel = 'noopener noreferrer';
+    const store = window.CURRENT_STORE;
+    if (store?.contact_email) {
+        telegramButton.href = `mailto:${store.contact_email}`;
+        telegramButton.textContent = '✉ Contact Shop by Email';
+    } else if (store?.contact_phone) {
+        telegramButton.href = `tel:${store.contact_phone}`;
+        telegramButton.textContent = '☎ Contact Shop by Phone';
+    } else {
+        telegramButton.remove();
+    }
     telegramButton.className = 'telegram-button';
     telegramButton.textContent = '✈ Contact Shop on Telegram';
 

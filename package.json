@@ -4,9 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "prisma generate",
+    "db:migrate:deploy": "prisma migrate deploy",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/app.js",
     "dev": "nodemon src/app.js",
+    "create:platform-owner": "node createPlatformOwner.js",
     "postinstall": "prisma skills sync || exit 0"
   },
   "keywords": [],

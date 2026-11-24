@@ -1,5 +1,4 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 :root {
     --navy: #14213d;
@@ -18,7 +17,7 @@
 }
 
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: Cambria, Georgia, serif;
     background: var(--background);
     min-height: 100vh;
     color: var(--text);

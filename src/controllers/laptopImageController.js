@@ -97,9 +97,7 @@ const uploadLaptopImages = async (req, res) => {
         }
 
         const laptop = await prisma.laptop.findUnique({
-            where: {
-                laptop_id: laptopId
-            }
+            where: { laptop_id: laptopId, store_id: req.storeId }
         });
 
         if (!laptop) {
@@ -112,7 +110,7 @@ const uploadLaptopImages = async (req, res) => {
         for (const file of uploadedFiles) {
             const asset = await uploadToCloudinary(
                 file,
-                `liq-tecnnologies/laptops/${laptopId}`
+                `stores/${req.store.slug}/laptops/${laptopId}`
             );
             uploadedAssets.push(asset);
         }
@@ -121,6 +119,7 @@ const uploadLaptopImages = async (req, res) => {
             const existingPrimary = await tx.laptopImage.findFirst({
                 where: {
                     laptop_id: laptopId,
+                    store_id: req.storeId,
                     is_primary: true
                 }
             });
@@ -134,6 +133,7 @@ const uploadLaptopImages = async (req, res) => {
                 await tx.laptopImage.updateMany({
                     where: {
                         laptop_id: laptopId,
+                        store_id: req.storeId,
                         is_primary: true
                     },
                     data: {
@@ -145,6 +145,7 @@ const uploadLaptopImages = async (req, res) => {
             await tx.laptopImage.createMany({
                 data: uploadedAssets.map((asset, index) => ({
                     laptop_id: laptopId,
+                    store_id: req.storeId,
                     image_url: asset.secure_url,
                     cloudinary_public_id: asset.public_id,
                     is_primary: primaryIndex !== null
@@ -158,7 +159,8 @@ const uploadLaptopImages = async (req, res) => {
 
         const images = await prisma.laptopImage.findMany({
             where: {
-                laptop_id: laptopId
+                laptop_id: laptopId,
+                store_id: req.storeId
             },
             orderBy: {
                 image_id: 'asc'
@@ -168,7 +170,7 @@ const uploadLaptopImages = async (req, res) => {
         return res.status(201).json({
             success: true,
             message: 'Laptop images uploaded successfully!',
-            data: images
+            data: images.map(({ store_id, ...image }) => image)
         });
 
     } catch (error) {
@@ -199,9 +201,7 @@ const getLaptopImages = async (req, res) => {
         }
 
         const laptop = await prisma.laptop.findUnique({
-            where: {
-                laptop_id: laptopId
-            }
+            where: { laptop_id: laptopId, store_id: req.storeId }
         });
 
         if (!laptop) {
@@ -213,7 +213,8 @@ const getLaptopImages = async (req, res) => {
 
         const images = await prisma.laptopImage.findMany({
             where: {
-                laptop_id: laptopId
+                laptop_id: laptopId,
+                store_id: req.storeId
             },
             orderBy: [
                 { is_primary: 'desc' },
@@ -223,7 +224,7 @@ const getLaptopImages = async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            data: images
+            data: images.map(({ store_id, ...image }) => image)
         });
 
     } catch (error) {
@@ -253,7 +254,8 @@ const setPrimaryImage = async (req, res) => {
         const image = await prisma.laptopImage.findFirst({
             where: {
                 image_id: imageId,
-                laptop_id: laptopId
+                laptop_id: laptopId,
+                store_id: req.storeId
             }
         });
 
@@ -269,6 +271,7 @@ const setPrimaryImage = async (req, res) => {
             await tx.laptopImage.updateMany({
                 where: {
                     laptop_id: laptopId,
+                    store_id: req.storeId,
                     is_primary: true
                 },
                 data: {
@@ -319,7 +322,8 @@ const deleteLaptopImage = async (req, res) => {
         const image = await prisma.laptopImage.findFirst({
             where: {
                 image_id: imageId,
-                laptop_id: laptopId
+                laptop_id: laptopId,
+                store_id: req.storeId
             }
         });
 
@@ -350,7 +354,8 @@ const deleteLaptopImage = async (req, res) => {
             if (image.is_primary) {
                 const nextImage = await tx.laptopImage.findFirst({
                     where: {
-                        laptop_id: laptopId
+                        laptop_id: laptopId,
+                        store_id: req.storeId
                     },
                     orderBy: {
                         image_id: 'asc'

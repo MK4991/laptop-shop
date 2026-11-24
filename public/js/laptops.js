@@ -26,6 +26,8 @@ const conditionFilter = document.getElementById('conditionFilter');
 const customSpecificationFilters = document.getElementById('customSpecificationFilters');
 const sortFilter = document.getElementById('sortFilter');
 const clearFiltersButton = document.getElementById('clearFilters');
+const toggleCustomerFilters = document.getElementById('toggleCustomerFilters');
+const customerFilterControls = document.getElementById('customerFilterControls');
 
 
 let cataloguePage = 1;
@@ -40,7 +42,8 @@ let customFilterDefinitions = [];
 
 async function loadAllLaptops() {
     try {
-        const response = await fetch('/api/laptops/filters');
+        await loadStoreProfile();
+        const response = await fetch(storeApi('/laptops/filters'));
 
         if (!response.ok) {
             throw new Error('Could not load laptops.');
@@ -49,8 +52,11 @@ async function loadAllLaptops() {
         const result = await response.json();
 
         populateBrandFilter(result.data.brands || []);
+        populateTextFilter(processorFilter, result.data.processorBrands || []);
         populateGenerationFilter(result.data.processorGenerations || []);
-        const customResponse = await fetch('/api/custom-specifications');
+        populateTextFilter(storageTypeFilter, result.data.storageTypes || []);
+        populateTextFilter(conditionFilter, result.data.conditions || []);
+        const customResponse = await fetch(storeApi('/custom-specifications'));
         const customResult = await customResponse.json();
         if (!customResponse.ok || !customResult.success) {
             throw new Error(customResult.message || 'Could not load custom specification filters.');
@@ -134,6 +140,12 @@ function populateBrandFilter(brands) {
         option.textContent = brand;
 
         brandFilter.appendChild(option);
+    });
+}
+
+function populateTextFilter(select, values) {
+    values.forEach((value) => {
+        select.add(new Option(value, value));
     });
 }
 
@@ -240,7 +252,7 @@ async function loadFilteredLaptops(page = 1) {
         params.set('available_only', 'true');
 
         const response = await fetch(
-            `/api/laptops?${params.toString()}`
+            storeApi(`/laptops?${params.toString()}`)
         );
 
         if (!response.ok) {
@@ -384,7 +396,7 @@ function createLaptopCard(laptop) {
 
     const detailsLink = document.createElement('a');
     detailsLink.className = 'product-button';
-    detailsLink.href = `/laptops/${laptop.laptop_id}`;
+    detailsLink.href = storePath(`/laptops/${laptop.laptop_id}`);
     detailsLink.textContent = 'View Details';
 
     bottom.appendChild(priceContainer);
@@ -441,6 +453,16 @@ const filterElements = [
 
 filterElements.forEach(filter => {
     filter.addEventListener('change', () => loadFilteredLaptops(1));
+});
+
+toggleCustomerFilters.addEventListener('click', () => {
+    const expanded = toggleCustomerFilters.getAttribute('aria-expanded') === 'true';
+    toggleCustomerFilters.setAttribute('aria-expanded', String(!expanded));
+    customerFilterControls.hidden = expanded;
+    toggleCustomerFilters.querySelector('.customer-filter-toggle-label').textContent = expanded
+        ? 'Show filters'
+        : 'Hide filters';
+    toggleCustomerFilters.querySelector('.customer-filter-toggle-icon').textContent = expanded ? '⌄' : '⌃';
 });
 
 

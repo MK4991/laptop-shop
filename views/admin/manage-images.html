@@ -9,6 +9,8 @@
     <title>Manage Laptop Images | LIQ TECHNOLOGIES</title>
 
     <link rel="stylesheet" href="/css/admin-manage-images.css">
+    <link rel="stylesheet" href="/css/admin-theme.css">
+    <script src="/js/admin-theme.js" defer></script>
 </head>
 
 <body>
@@ -21,7 +23,7 @@
             <div class="sidebar-brand">
                 <div class="brand-icon">L</div>
                 <div>
-                    <h2>LIQ TECHNOLOGIES</h2>
+                    <h2 class="store-brand-name">LIQ TECHNOLOGIES</h2>
                     <span>ADMIN PANEL</span>
                 </div>
             </div>
@@ -29,17 +31,17 @@
             <div class="sidebar-section">
                 <p class="sidebar-label">MAIN MENU</p>
 
-                <a href="/admin" class="sidebar-link">
+                <a href="/admin" data-store-route="/admin" class="sidebar-link">
                     <span class="nav-icon">▦</span>
                     Dashboard
                 </a>
 
-                <a href="/admin#inventory" class="sidebar-link">
+                <a href="/admin#inventory" data-store-route="/admin#inventory" class="sidebar-link">
                     <span class="nav-icon">▤</span>
                     Laptop Inventory
                 </a>
 
-                <a href="/admin/laptops/new" class="sidebar-link">
+                <a href="/admin/laptops/new" data-store-route="/admin/laptops/new" class="sidebar-link">
                     <span class="nav-icon">＋</span>
                     Add New Laptop
                 </a>
@@ -65,12 +67,12 @@
             <header class="topbar">
 
                 <div class="breadcrumb">
-                    <a href="/admin">Dashboard</a>
+                    <a href="/admin" data-store-route="/admin">Dashboard</a>
                     <span>/</span>
                     <span>Manage Images</span>
                 </div>
 
-                <a href="/admin" class="back-button">
+                <a href="/admin" data-store-route="/admin" class="back-button">
                     ← Back to Dashboard
                 </a>
 
@@ -192,7 +194,7 @@
 
 
                 <footer class="page-footer">
-                    <p>LIQ TECHNOLOGIES Admin Panel</p>
+                    <p class="store-admin-label">LIQ TECHNOLOGIES Admin Panel</p>
                     <span>Inventory Management</span>
                 </footer>
 
@@ -231,6 +233,7 @@
         </div>
     </dialog>
 
+    <script src="/js/store-context.js"></script>
     <script src="/js/admin-manage-images.js"></script>
 
 </body>

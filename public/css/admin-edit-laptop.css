@@ -18,7 +18,7 @@
 }
 
 body {
-    font-family: Inter, "Segoe UI", Arial, sans-serif;
+    font-family: Cambria, Georgia, serif;
     background: var(--background);
     color: var(--text);
 }

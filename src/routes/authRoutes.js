@@ -9,6 +9,7 @@ const {
 } = require('../middleware/authMiddleware');
 
 router.post('/login', authController.login);
+router.post('/change-password', authController.changePassword);
 
 router.post('/logout', authController.logout);
 

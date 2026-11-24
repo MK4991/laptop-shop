@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="/css/mobile-responsive.css">
 
     <script src="/js/theme.js" defer></script>
+    <script src="/js/store-context.js" defer></script>
     <script src="/js/laptops.js" defer></script>
 </head>
 
@@ -25,16 +26,17 @@
     <header class="site-header">
         <div class="container navbar">
 
-            <a href="/" class="brand">
+            <a href="/" data-store-route="" class="brand">
                 <span class="brand-icon">L</span>
-                <span>LIQ <span class="brand-highlight">TECHNOLOGIES</span></span>
+                <span class="store-brand-name">LIQ TECHNOLOGIES</span>
             </a>
 
             <nav class="main-nav">
-                <a href="/" class="nav-link">Home</a>
-                <a href="/laptops" class="nav-link active">
+                <a href="/" data-store-route="" class="nav-link">Home</a>
+                <a href="/laptops" data-store-route="/laptops" class="nav-link active">
                     Browse Laptops
                 </a>
+                <a href="/contact" data-store-route="/contact" class="nav-link contact-nav-link" hidden>Contact Us</a>
             </nav>
 
             <div class="nav-actions">
@@ -94,12 +96,17 @@
 
                     <div class="filter-header">
                         <h2>Filters</h2>
-
-                        <button id="clearFilters" type="button">
-                            Clear All
-                        </button>
+                        <div class="filter-header-actions">
+                            <button id="clearFilters" type="button">Clear All</button>
+                            <button id="toggleCustomerFilters" class="customer-filter-toggle" type="button"
+                                aria-expanded="true" aria-controls="customerFilterControls">
+                                <span class="customer-filter-toggle-label">Hide filters</span>
+                                <span class="customer-filter-toggle-icon" aria-hidden="true">⌃</span>
+                            </button>
+                        </div>
                     </div>
 
+                    <div id="customerFilterControls" class="customer-filter-controls">
 
                     <!-- Brand Filter -->
                     <div class="filter-group">
@@ -117,9 +124,6 @@
 
                         <select id="processorFilter">
                             <option value="">All Processors</option>
-                            <option value="Intel">Intel</option>
-                            <option value="AMD">AMD</option>
-                            <option value="Apple">Apple</option>
                         </select>
                     </div>
 
@@ -166,9 +170,6 @@
 
                         <select id="storageTypeFilter">
                             <option value="">All Types</option>
-                            <option value="SSD">SSD</option>
-                            <option value="NVMe SSD">NVMe SSD</option>
-                            <option value="HDD">HDD</option>
                         </select>
                     </div>
 
@@ -201,13 +202,12 @@
 
                         <select id="conditionFilter">
                             <option value="">All Conditions</option>
-                            <option value="New">New</option>
-                            <option value="Used">Used</option>
                         </select>
                     </div>
 
 
                     <div id="customSpecificationFilters" class="custom-specification-filters"></div>
+                    </div>
 
                 </aside>
 
@@ -271,18 +271,20 @@
     <footer class="site-footer">
         <div class="container footer-content">
 
-            <a href="/" class="brand footer-brand">
+            <a href="/" data-store-route="" class="brand footer-brand">
                 <span class="brand-icon">L</span>
-                <span>LIQ <span class="brand-highlight">TECHNOLOGIES</span></span>
+                <span class="store-brand-name">LIQ TECHNOLOGIES</span>
             </a>
 
             <p>
                 Find the right laptop for your needs.
             </p>
 
+            <div class="store-social-links footer-social-links" aria-label="Store social media links" hidden></div>
+
             <span class="copyright">
-                © <span id="currentYear"></span> LIQ TECHNOLOGIES.
-                All rights reserved.
+                © <span id="currentYear"></span> <span class="store-name-text">LIQ TECHNOLOGIES</span>.
+                All rights reserved. <span class="platform-credit">Powered by MK TECH</span>
             </span>
 
         </div>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+    <title>Platform Owner Sign In | MK TECH</title>
+    <link rel="stylesheet" href="/css/platform-dashboard.css">
+</head>
+<body class="platform-login-page">
+    <main class="platform-login-card">
+        <div class="platform-brand-icon">MK</div>
+        <p class="platform-eyebrow">PLATFORM MANAGEMENT</p>
+        <h1>Platform Owner</h1>
+        <p class="platform-muted">Sign in to manage stores and their administrators.</p>
+        <p id="loginMessage" class="platform-message" role="status"></p>
+        <form id="platformLoginForm">
+            <label>Username<input name="username" autocomplete="username" required></label>
+            <label>Password<input name="password" type="password" autocomplete="current-password" required></label>
+            <button class="platform-primary-button" type="submit">Sign in</button>
+        </form>
+    </main>
+    <script src="/js/platform-login.js"></script>
+</body>
+</html>

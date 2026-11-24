@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+    <title>Store Profile | LIQ TECHNOLOGIES</title>
+    <link rel="stylesheet" href="/css/admin-dashboard.css">
+    <link rel="stylesheet" href="/css/admin-theme.css">
+    <script src="/js/admin-theme.js" defer></script>
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="sidebar">
+            <div class="sidebar-brand"><div class="brand-icon">L</div><div><h2 class="store-brand-name">LIQ TECHNOLOGIES</h2><span>ADMIN PANEL</span></div></div>
+            <div class="sidebar-label">WORKSPACE</div>
+            <nav class="sidebar-nav">
+                <a href="/admin" data-store-route="/admin" class="nav-link"><span class="nav-icon">▦</span>Dashboard</a>
+                <a href="/admin#inventory" data-store-route="/admin#inventory" class="nav-link"><span class="nav-icon">▤</span>Laptop Inventory</a>
+                <a href="/admin/settings" data-store-route="/admin/settings" class="nav-link active"><span class="nav-icon">⚙</span>Settings</a>
+                <button class="nav-link" id="sidebarAddLaptopBtn"><span class="nav-icon">＋</span>Add New Laptop</button>
+            </nav>
+            <div class="sidebar-bottom">
+                <div class="sidebar-profile"><div class="profile-avatar">A</div><div class="profile-info"><strong>Administrator</strong><span>Store Manager</span></div></div>
+                <button id="logoutBtn" class="sidebar-logout"><span>↪</span>Logout</button>
+            </div>
+        </aside>
+        <main class="main-content">
+            <header class="topbar">
+                <div><span class="breadcrumb">Workspace / Settings / Store Profile</span><h2>Settings</h2></div>
+                <div class="topbar-right"><div class="admin-welcome"><span class="online-dot"></span><span id="adminUsername">Welcome, Admin</span></div><div class="topbar-avatar">A</div></div>
+            </header>
+            <section class="dashboard-content">
+                <div class="settings-subnav"><a href="/admin/settings" data-store-route="/admin/settings">← All settings</a><a class="active" href="/admin/settings/profile" data-store-route="/admin/settings/profile">Store Profile</a><a href="/admin/settings/product-options" data-store-route="/admin/settings/product-options">Product Form Options</a></div>
+                <div class="welcome-section"><div><span class="section-tag">STORE IDENTITY</span><h1>Store Profile</h1><p>Manage your store identity and the contact details customers see.</p></div></div>
+                <section class="inventory-section store-profile-section">
+                    <div class="inventory-header"><div><span class="section-tag">PROFILE DETAILS</span><h2>Store identity</h2></div></div>
+                    <form id="storeProfileForm" class="store-profile-form">
+                        <div class="store-profile-logo-field">
+                            <div class="store-profile-logo-preview" id="storeProfileLogoPreview" aria-label="Current store logo">S</div>
+                            <div class="store-profile-logo-controls"><label for="storeProfileLogo">Store logo</label><input id="storeProfileLogo" name="logo" type="file" accept="image/jpeg,image/png,image/webp"><small>JPEG, PNG, or WebP. Maximum 5 MB.</small><label class="store-profile-remove-logo" id="storeProfileRemoveLogoLabel" hidden><input id="storeProfileRemoveLogo" type="checkbox" name="removeLogo" value="true">Remove current logo</label></div>
+                        </div>
+                        <label class="store-profile-name-field" for="storeProfileName">Store name<input id="storeProfileName" name="name" type="text" maxlength="100" required autocomplete="organization"></label>
+                        <div class="store-profile-contact-grid">
+                            <label for="storeProfileEmail">Contact email<input id="storeProfileEmail" name="contact_email" type="email" maxlength="100" autocomplete="email" placeholder="hello@example.com"></label>
+                            <label for="storeProfilePhone">Contact phone<input id="storeProfilePhone" name="contact_phone" type="tel" maxlength="40" autocomplete="tel" placeholder="+251 ..."></label>
+                        </div>
+                        <section class="store-profile-location-fields" aria-labelledby="storeLocationHeading">
+                            <div class="store-profile-location-heading"><h3 id="storeLocationHeading">Store location</h3><p>Add the address customers can visit and a map link for directions.</p></div>
+                            <label for="storeProfileAddress">Store address<textarea id="storeProfileAddress" name="contact_address" rows="3" maxlength="300" autocomplete="street-address" placeholder="Street, area, city, country"></textarea></label>
+                            <label for="storeProfileMapsUrl"><span>Google Maps link <span class="field-optional">Optional</span></span><input id="storeProfileMapsUrl" name="maps_url" type="url" maxlength="1000" pattern="https?://.+" title="Enter a link beginning with http:// or https://" placeholder="https://maps.app.goo.gl/..."><small>In Google Maps, open your location, choose Share, and paste the link here.</small></label>
+                            <label for="storeProfileMapEmbedUrl"><span>Pinned map <span class="field-optional">Optional</span></span><textarea id="storeProfileMapEmbedUrl" name="map_embed_url" rows="3" maxlength="5000" placeholder="Paste the Google Maps embed link or copied iframe code"></textarea><small>For an exact pin: in Google Maps choose Share → Embed a map → Copy HTML, then paste it here.</small></label>
+                        </section>
+                        <section class="store-social-manager" aria-labelledby="storeSocialHeading">
+                            <div class="store-social-manager-heading"><div><h3 id="storeSocialHeading">Social media links</h3><p>Choose a platform and add its profile URL. Choose Other for an unlisted platform.</p></div><span id="socialLinkLimitNote">Up to 12 links</span></div>
+                            <div id="storeSocialLinksList" class="store-social-links-editor"></div>
+                            <button type="button" id="addSocialLinkBtn" class="secondary-btn">＋ Add social link</button>
+                        </section>
+                        <p id="storeProfileMessage" class="dashboard-message" role="status" aria-live="polite"></p>
+                        <button type="submit" class="primary-btn" id="saveStoreProfileBtn">Save store profile</button>
+                    </form>
+                </section>
+                <footer class="dashboard-footer"><span class="store-admin-label">LIQ TECHNOLOGIES Admin Panel</span><span>Store Settings</span></footer>
+            </section>
+        </main>
+    </div>
+    <script src="/js/store-context.js"></script>
+    <script src="/js/admin-store-profile.js"></script>
+</body>
+</html>

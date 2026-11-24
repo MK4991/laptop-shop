@@ -15,7 +15,7 @@ const laptopInclude = {
     specifications: { include: { specification: true } }
 };
 
-async function parseCustomSpecificationValues(entries) {
+async function parseCustomSpecificationValues(entries, storeId) {
     if (entries === undefined) return { values: [], error: null };
     if (!Array.isArray(entries) || entries.length > 30) {
         return { values: [], error: 'Provide no more than 30 custom specification values.' };
@@ -38,7 +38,7 @@ async function parseCustomSpecificationValues(entries) {
 
     if (!values.length) return { values, error: null };
     const definitions = await prisma.customSpecification.findMany({
-        where: { specification_id: { in: values.map((entry) => entry.specification_id) } }
+        where: { store_id: storeId, specification_id: { in: values.map((entry) => entry.specification_id) } }
     });
     const definitionMap = new Map(definitions.map((item) => [item.specification_id.toString(), item]));
 
@@ -61,8 +61,8 @@ async function parseCustomSpecificationValues(entries) {
     return { values, error: null };
 }
 
-async function saveCustomSpecificationValues(tx, laptopId, values, replace = false) {
-    if (replace) await tx.laptopSpecification.deleteMany({ where: { laptop_id: laptopId } });
+async function saveCustomSpecificationValues(tx, laptopId, storeId, values, replace = false) {
+    if (replace) await tx.laptopSpecification.deleteMany({ where: { laptop_id: laptopId, store_id: storeId } });
     for (const item of values) {
         await tx.laptopSpecification.upsert({
             where: {
@@ -74,6 +74,7 @@ async function saveCustomSpecificationValues(tx, laptopId, values, replace = fal
             update: { value: item.value, number_value: item.number_value },
             create: {
                 laptop_id: laptopId,
+                store_id: storeId,
                 specification_id: item.specification_id,
                 value: item.value,
                 number_value: item.number_value
@@ -83,9 +84,10 @@ async function saveCustomSpecificationValues(tx, laptopId, values, replace = fal
 }
 
 function serializeLaptop(laptop) {
-    const { specifications: values = [], ...data } = laptop;
+    const { specifications: values = [], store_id, ...data } = laptop;
     return {
         ...data,
+        images: data.images?.map(({ store_id: imageStoreId, ...image }) => image),
         specifications: values.map(({ specification, value }) => ({
             specification_id: specification.specification_id.toString(),
             name: specification.name,
@@ -109,8 +111,10 @@ const getAllLaptops = async (req, res) => {
             min_price,
             max_price,
             sort,
-            available_only
+            available_only,
+            inventory_status
         } = req.query;
+        const storeId = req.storeId;
 
         const requestedPage = Number.parseInt(req.query.page, 10);
         const requestedPageSize = Number.parseInt(req.query.per_page, 10);
@@ -120,19 +124,36 @@ const getAllLaptops = async (req, res) => {
             : 25;
 
         // Build the database filtering conditions
-        const filters = {};
+        const filters = { store_id: storeId };
 
         if (available_only === 'true') {
             filters.availability = 'Available';
             filters.quantity = { gt: 0 };
         }
 
-        // Search by model or processor
-        if (search) {
+        if (inventory_status === 'available') {
+            filters.availability = 'Available';
+            filters.quantity = { gt: 0 };
+        } else if (inventory_status === 'unavailable') {
             filters.OR = [
-                { model: { contains: search } },
-                { processor_model: { contains: search } }
+                { availability: { not: 'Available' } },
+                { quantity: 0 }
             ];
+        }
+
+        // Search by brand, model, or processor
+        if (search) {
+            const searchConditions = [
+                { brand: { brand_name: { contains: search, mode: 'insensitive' } } },
+                { model: { contains: search, mode: 'insensitive' } },
+                { processor_model: { contains: search, mode: 'insensitive' } }
+            ];
+            if (filters.OR) {
+                filters.AND = [...(filters.AND || []), { OR: filters.OR }, { OR: searchConditions }];
+                delete filters.OR;
+            } else {
+                filters.OR = searchConditions;
+            }
         }
 
         if (brand) {
@@ -185,8 +206,10 @@ const getAllLaptops = async (req, res) => {
             const definitions = await prisma.customSpecification.findMany({
                 where: {
                     specification_id: {
+                        // All filter definitions are scoped to the resolved tenant.
                         in: customSpecificationIds.map((id) => BigInt(id))
-                    }
+                    },
+                    store_id: storeId
                 }
             });
             const customFilters = [];
@@ -255,12 +278,14 @@ const getAllLaptops = async (req, res) => {
             available_only === 'true'
                 ? Promise.resolve(null)
                 : Promise.all([
-                    prisma.laptop.count({ where: { availability: 'Available', quantity: { gt: 0 } } }),
-                    prisma.laptop.aggregate({ _sum: { quantity: true } }),
+                    prisma.laptop.count({ where: { store_id: storeId } }),
+                    prisma.laptop.count({ where: { store_id: storeId, availability: 'Available', quantity: { gt: 0 } } }),
+                    prisma.laptop.aggregate({ where: { store_id: storeId }, _sum: { quantity: true } }),
                     prisma.laptop.count({
-                        where: { OR: [{ availability: { not: 'Available' } }, { quantity: 0 }] }
+                        where: { store_id: storeId, OR: [{ availability: { not: 'Available' } }, { quantity: 0 }] }
                     })
-                ]).then(([availableModels, totalUnits, unavailableModels]) => ({
+                ]).then(([totalModels, availableModels, totalUnits, unavailableModels]) => ({
+                    totalModels,
                     availableModels,
                     totalUnits: totalUnits._sum.quantity || 0,
                     unavailableModels
@@ -275,9 +300,7 @@ const getAllLaptops = async (req, res) => {
             skip: (page - 1) * perPage,
             take: perPage
         });
-        const statistics = statisticsSummary
-            ? { totalModels: total, ...statisticsSummary }
-            : null;
+        const statistics = statisticsSummary;
 
         res.status(200).json({
             success: true,
@@ -289,7 +312,10 @@ const getAllLaptops = async (req, res) => {
                 totalPages
             },
             ...(statistics && { statistics }),
-            data: laptops
+            data: laptops.map(({ store_id, images = [], ...laptop }) => ({
+                ...laptop,
+                images: images.map(({ store_id: imageStoreId, ...image }) => image)
+            }))
         });
 
     } catch (error) {
@@ -304,25 +330,42 @@ const getAllLaptops = async (req, res) => {
 
 const getLaptopFilterOptions = async (req, res) => {
     try {
-        const availableLaptops = { availability: 'Available', quantity: { gt: 0 } };
-        const [brands, generations] = await Promise.all([
+        const [brands, processorBrands, generations, storageTypes, conditions] = await Promise.all([
             prisma.brand.findMany({
-                where: { laptops: { some: availableLaptops } },
+                where: { store_id: req.storeId },
                 select: { brand_name: true },
                 orderBy: { brand_name: 'asc' }
             }),
+            prisma.processorBrandOption.findMany({
+                where: { store_id: req.storeId },
+                select: { option_name: true },
+                orderBy: { option_name: 'asc' }
+            }),
             prisma.laptop.findMany({
-                where: { ...availableLaptops, processor_generation: { not: null } },
+                where: { store_id: req.storeId, processor_generation: { not: null } },
                 select: { processor_generation: true },
                 distinct: ['processor_generation'],
                 orderBy: { processor_generation: 'asc' }
+            }),
+            prisma.storageTypeOption.findMany({
+                where: { store_id: req.storeId },
+                select: { option_name: true },
+                orderBy: { option_name: 'asc' }
+            }),
+            prisma.conditionOption.findMany({
+                where: { store_id: req.storeId },
+                select: { option_name: true },
+                orderBy: { option_name: 'asc' }
             })
         ]);
         res.json({
             success: true,
             data: {
                 brands: brands.map((brand) => brand.brand_name),
-                processorGenerations: generations.map((item) => item.processor_generation)
+                processorBrands: processorBrands.map((item) => item.option_name),
+                processorGenerations: generations.map((item) => item.processor_generation),
+                storageTypes: storageTypes.map((item) => item.option_name),
+                conditions: conditions.map((item) => item.option_name)
             }
         });
     } catch (error) {
@@ -331,15 +374,59 @@ const getLaptopFilterOptions = async (req, res) => {
     }
 };
 
+const getAdminLaptopFilterOptions = async (req, res) => {
+    try {
+        const [brands, processorBrands, generations, storageTypes, conditions] = await Promise.all([
+            prisma.brand.findMany({
+                where: { store_id: req.storeId },
+                select: { brand_name: true },
+                orderBy: { brand_name: 'asc' }
+            }),
+            prisma.processorBrandOption.findMany({
+                where: { store_id: req.storeId },
+                select: { option_name: true },
+                orderBy: { option_name: 'asc' }
+            }),
+            prisma.laptop.findMany({
+                where: { store_id: req.storeId, processor_generation: { not: null } },
+                select: { processor_generation: true },
+                distinct: ['processor_generation'],
+                orderBy: { processor_generation: 'asc' }
+            }),
+            prisma.storageTypeOption.findMany({
+                where: { store_id: req.storeId },
+                select: { option_name: true },
+                orderBy: { option_name: 'asc' }
+            }),
+            prisma.conditionOption.findMany({
+                where: { store_id: req.storeId },
+                select: { option_name: true },
+                orderBy: { option_name: 'asc' }
+            })
+        ]);
+        res.json({
+            success: true,
+            data: {
+                brands: brands.map((item) => item.brand_name),
+                processorBrands: processorBrands.map((item) => item.option_name),
+                processorGenerations: generations.map((item) => item.processor_generation),
+                storageTypes: storageTypes.map((item) => item.option_name),
+                conditions: conditions.map((item) => item.option_name)
+            }
+        });
+    } catch (error) {
+        console.error('Admin laptop filter options error:', error);
+        res.status(500).json({ success: false, message: 'Failed to load inventory filter options.' });
+    }
+};
+
 
 const getLaptopById = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const laptop = await prisma.laptop.findUnique({
-            where: {
-                laptop_id: BigInt(id)
-            },
+        const laptop = await prisma.laptop.findFirst({
+            where: { laptop_id: BigInt(id), store_id: req.storeId },
             include: {
                 brand: true,
                 images: true,
@@ -389,7 +476,8 @@ const createLaptop = async (req, res) => {
             specifications
         } = req.body;
 
-        const parsedSpecifications = await parseCustomSpecificationValues(specifications);
+        const storeId = req.storeId;
+        const parsedSpecifications = await parseCustomSpecificationValues(specifications, storeId);
         if (parsedSpecifications.error) {
             return res.status(400).json({ success: false, message: parsedSpecifications.error });
         }
@@ -418,10 +506,10 @@ const createLaptop = async (req, res) => {
 
         // Look up the configured brand and selected categories
         const [brand, processorBrandOption, storageTypeOption, conditionOption] = await Promise.all([
-            prisma.brand.findUnique({ where: { brand_name: brandName } }),
-            prisma.processorBrandOption.findUnique({ where: { option_name: processor_brand.trim() } }),
-            prisma.storageTypeOption.findUnique({ where: { option_name: storage_type.trim() } }),
-            prisma.conditionOption.findUnique({ where: { option_name: condition.trim() } })
+            prisma.brand.findFirst({ where: { store_id: storeId, brand_name: brandName } }),
+            prisma.processorBrandOption.findFirst({ where: { store_id: storeId, option_name: processor_brand.trim() } }),
+            prisma.storageTypeOption.findFirst({ where: { store_id: storeId, option_name: storage_type.trim() } }),
+            prisma.conditionOption.findFirst({ where: { store_id: storeId, option_name: condition.trim() } })
         ]);
         if (!brand || !processorBrandOption || !storageTypeOption || !conditionOption) {
             return res.status(400).json({
@@ -432,6 +520,7 @@ const createLaptop = async (req, res) => {
 
         // Prepare the laptop configuration
         const laptopData = {
+            store_id: storeId,
             brand_id: brand.brand_id,
             model: model.trim(),
             processor_brand: processor_brand.trim(),
@@ -496,9 +585,9 @@ const createLaptop = async (req, res) => {
                         include: laptopInclude
                     });
 
-                    await saveCustomSpecificationValues(tx, updatedLaptop.laptop_id, parsedSpecifications.values);
-                    const laptopWithSpecifications = await tx.laptop.findUnique({
-                        where: { laptop_id: updatedLaptop.laptop_id }, include: laptopInclude
+                    await saveCustomSpecificationValues(tx, updatedLaptop.laptop_id, storeId, parsedSpecifications.values);
+                    const laptopWithSpecifications = await tx.laptop.findFirst({
+                        where: { laptop_id: updatedLaptop.laptop_id, store_id: storeId }, include: laptopInclude
                     });
 
                     return {
@@ -520,11 +609,12 @@ const createLaptop = async (req, res) => {
                 await saveCustomSpecificationValues(
                     tx,
                     newLaptop.laptop_id,
+                    storeId,
                     parsedSpecifications.values
                 );
 
-                const laptopWithSpecifications = await tx.laptop.findUnique({
-                    where: { laptop_id: newLaptop.laptop_id },
+                const laptopWithSpecifications = await tx.laptop.findFirst({
+                    where: { laptop_id: newLaptop.laptop_id, store_id: storeId },
                     include: laptopInclude
                 });
 
@@ -545,8 +635,8 @@ const createLaptop = async (req, res) => {
             const updatedLaptop = await prisma.$transaction(async (tx) => {
                 const updated = await increaseExistingQuantity(tx);
                 if (!updated) return null;
-                await saveCustomSpecificationValues(tx, updated.laptop_id, parsedSpecifications.values);
-                return tx.laptop.findUnique({ where: { laptop_id: updated.laptop_id }, include: laptopInclude });
+                await saveCustomSpecificationValues(tx, updated.laptop_id, storeId, parsedSpecifications.values);
+                return tx.laptop.findFirst({ where: { laptop_id: updated.laptop_id, store_id: storeId }, include: laptopInclude });
             });
 
             if (!updatedLaptop) {
@@ -583,6 +673,7 @@ const createLaptop = async (req, res) => {
 const updateLaptop = async (req, res) => {
     try {
         const id = BigInt(req.params.id);
+        const storeId = req.storeId;
 
         const {
             brand_name,
@@ -600,14 +691,14 @@ const updateLaptop = async (req, res) => {
             specifications
         } = req.body;
 
-        const parsedSpecifications = await parseCustomSpecificationValues(specifications);
+        const parsedSpecifications = await parseCustomSpecificationValues(specifications, storeId);
         if (parsedSpecifications.error) {
             return res.status(400).json({ success: false, message: parsedSpecifications.error });
         }
 
         // Check whether the laptop exists
-        const existingLaptop = await prisma.laptop.findUnique({
-            where: { laptop_id: id }
+        const existingLaptop = await prisma.laptop.findFirst({
+            where: { laptop_id: id, store_id: storeId }
         });
 
         if (!existingLaptop) {
@@ -621,8 +712,8 @@ const updateLaptop = async (req, res) => {
         let brandId = existingLaptop.brand_id;
 
         if (brand_name) {
-            const brand = await prisma.brand.findUnique({
-                where: { brand_name: brand_name.trim() }
+            const brand = await prisma.brand.findFirst({
+                where: { store_id: storeId, brand_name: brand_name.trim() }
             });
             if (!brand) {
                 return res.status(400).json({ success: false, message: 'Choose a brand from the configured options.' });
@@ -632,13 +723,13 @@ const updateLaptop = async (req, res) => {
 
         const requestedOptions = await Promise.all([
             processor_brand !== undefined
-                ? prisma.processorBrandOption.findUnique({ where: { option_name: processor_brand.trim() } })
+                ? prisma.processorBrandOption.findFirst({ where: { store_id: storeId, option_name: processor_brand.trim() } })
                 : true,
             storage_type !== undefined
-                ? prisma.storageTypeOption.findUnique({ where: { option_name: storage_type.trim() } })
+                ? prisma.storageTypeOption.findFirst({ where: { store_id: storeId, option_name: storage_type.trim() } })
                 : true,
             condition !== undefined
-                ? prisma.conditionOption.findUnique({ where: { option_name: condition.trim() } })
+                ? prisma.conditionOption.findFirst({ where: { store_id: storeId, option_name: condition.trim() } })
                 : true
         ]);
         if (requestedOptions.some((option) => option === null)) {
@@ -676,7 +767,8 @@ const updateLaptop = async (req, res) => {
         if (newQuantity === 0) {
             data.availability = 'Sold';
         } else if (
-            availability === 'Unavailable'
+            availability === 'Unavailable' ||
+            (availability === undefined && existingLaptop.availability === 'Unavailable')
         ) {
             data.availability = 'Unavailable';
         } else {
@@ -686,9 +778,9 @@ const updateLaptop = async (req, res) => {
         const updatedLaptop = await prisma.$transaction(async (tx) => {
             await tx.laptop.update({ where: { laptop_id: id }, data });
             if (specifications !== undefined) {
-                await saveCustomSpecificationValues(tx, id, parsedSpecifications.values, true);
+                await saveCustomSpecificationValues(tx, id, storeId, parsedSpecifications.values, true);
             }
-            return tx.laptop.findUnique({ where: { laptop_id: id }, include: laptopInclude });
+            return tx.laptop.findFirst({ where: { laptop_id: id, store_id: storeId }, include: laptopInclude });
         });
 
         res.status(200).json({
@@ -711,12 +803,11 @@ const updateLaptop = async (req, res) => {
 const deleteLaptop = async (req, res) => {
     try {
         const id = BigInt(req.params.id);
+        const storeId = req.storeId;
 
         // Check whether the laptop exists
-        const existingLaptop = await prisma.laptop.findUnique({
-            where: {
-                laptop_id: id
-            },
+        const existingLaptop = await prisma.laptop.findFirst({
+            where: { laptop_id: id, store_id: storeId },
             include: { images: true }
         });
 
@@ -739,9 +830,7 @@ const deleteLaptop = async (req, res) => {
 
         // Delete the laptop
         await prisma.laptop.delete({
-            where: {
-                laptop_id: id
-            }
+            where: { laptop_id: id }
         });
 
         const cleanupResults = await Promise.allSettled([
@@ -784,6 +873,7 @@ const deleteLaptop = async (req, res) => {
 module.exports = {
     getAllLaptops,
     getLaptopFilterOptions,
+    getAdminLaptopFilterOptions,
     getLaptopById,
     createLaptop,
     updateLaptop,

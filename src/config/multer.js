@@ -58,7 +58,8 @@ upload.validateFileSignatures = async (req, res, next) => {
             header.toString('ascii', 8, 12) === 'WEBP'
     ];
 
-    for (const file of req.files || []) {
+    const files = [...(req.files || []), ...(req.file ? [req.file] : [])];
+    for (const file of files) {
         const header = file.buffer?.subarray(0, 12);
         if (!header || !signatures.some((matches) => matches(header))) {
             return res.status(400).json({

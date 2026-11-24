@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
+    <title>Platform Dashboard | MK TECH</title>
+    <link rel="stylesheet" href="/css/platform-dashboard.css">
+</head>
+<body>
+    <div class="platform-layout">
+        <aside class="platform-sidebar">
+            <a class="platform-brand" href="/platform"><span class="platform-brand-icon">MK</span><span><strong>MK TECH</strong><small>PLATFORM OWNER</small></span></a>
+            <nav><a class="active" href="/platform">Stores</a></nav>
+            <div class="platform-sidebar-bottom"><span id="ownerName">Platform Owner</span><button id="platformLogout" class="platform-quiet-button">Sign out</button></div>
+        </aside>
+        <main class="platform-main">
+            <header class="platform-topbar"><div><span class="platform-eyebrow">PLATFORM MANAGEMENT</span><h1>Stores</h1></div><span id="platformWelcome" class="platform-welcome"></span></header>
+            <section class="platform-content">
+                <section class="platform-panel">
+                    <div class="platform-panel-heading"><div><h2>Create a store</h2><p>Set up a storefront and its first administrator.</p></div></div>
+                    <p id="createStoreMessage" class="platform-message" role="status"></p>
+                    <form id="createStoreForm" class="platform-form-grid">
+                        <label>Store name<input name="name" maxlength="100" required placeholder="Example Store"></label>
+                        <label>Store URL slug<input name="slug" maxlength="63" pattern="[a-z0-9]+(-[a-z0-9]+)*" required placeholder="example-store"><small>Fixed after creation. Use lowercase letters, numbers, and hyphens.</small></label>
+                        <label>Contact email<input name="contact_email" type="email" maxlength="100"></label>
+                        <label>Contact phone<input name="contact_phone" maxlength="40"></label>
+                        <label class="platform-form-wide">Logo URL<input name="logo_url" type="url" placeholder="https://..."><small>Optional. The image must be available over HTTPS.</small></label>
+                        <div class="platform-form-divider"><h3>First store administrator</h3><p>A temporary password will be generated and shown once after the store is created.</p></div>
+                        <label>Admin username<input name="admin_username" maxlength="50" required autocomplete="off"></label>
+                        <label>Admin email<input name="admin_email" type="email" maxlength="100" required></label>
+                        <div class="platform-form-actions"><button class="platform-primary-button" type="submit">Create store</button></div>
+                    </form>
+                    <div id="credentialNotice" class="platform-credential-notice" hidden></div>
+                </section>
+
+                <section class="platform-panel">
+                    <div class="platform-panel-heading"><div><h2>Store directory</h2><p>Manage storefront status and store administrator accounts.</p></div><button type="button" id="refreshStores" class="platform-secondary-button">Refresh</button></div>
+                    <p id="storeListMessage" class="platform-message" role="status"></p>
+                    <div id="storeList" class="platform-store-list"><p class="platform-muted">Loading stores…</p></div>
+                </section>
+            </section>
+        </main>
+    </div>
+    <dialog id="platformDialog" class="platform-dialog"><form method="dialog"><div class="platform-dialog-mark">!</div><h2 id="dialogTitle">Confirm action</h2><p id="dialogMessage"></p><div class="platform-dialog-actions"><button value="cancel" class="platform-secondary-button">Cancel</button><button value="confirm" class="platform-danger-button">Confirm</button></div></form></dialog>
+    <script src="/js/platform-dashboard.js"></script>
+</body>
+</html>

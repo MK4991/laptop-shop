@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -6,19 +5,74 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Store {
+  store_id      BigInt   @id @default(autoincrement())
+  name          String   @db.VarChar(100)
+  slug          String   @unique @db.VarChar(63)
+  is_active     Boolean  @default(true)
+  logo_url      String?  @db.VarChar(500)
+    logo_public_id String? @db.VarChar(255)
+  contact_email String?  @db.VarChar(100)
+  contact_phone String?  @db.VarChar(40)
+  contact_address String? @db.VarChar(300)
+  maps_url       String?  @db.VarChar(1000)
+  map_embed_url  String?  @db.VarChar(2000)
+  created_at    DateTime @default(now()) @db.Timestamptz(3)
+  updated_at    DateTime @updatedAt @db.Timestamptz(3)
+
+  brands                    Brand[]
+  laptops                   Laptop[]
+  processor_brand_options   ProcessorBrandOption[]
+  storage_type_options      StorageTypeOption[]
+  condition_options         ConditionOption[]
+  custom_specifications     CustomSpecification[]
+  administrators            Administrator[]
+  social_links              StoreSocialLink[]
+
+  @@map("store")
+}
+
+model StoreSocialLink {
+  social_link_id BigInt @id @default(autoincrement())
+  store_id       BigInt
+  label          String @db.VarChar(40)
+  url            String @db.VarChar(500)
+  display_order  Int    @default(0)
+
+  store Store @relation(fields: [store_id], references: [store_id], onDelete: Cascade)
+
+  @@index([store_id, display_order])
+  @@map("store_social_link")
+}
+
+model PlatformOwner {
+  owner_id      BigInt @id @default(autoincrement())
+  username      String @unique @db.VarChar(50)
+  email         String @unique @db.VarChar(100)
+  password_hash String @db.VarChar(255)
+
+  @@map("platform_owner")
 }
 
 model Brand {
   brand_id   BigInt   @id @default(autoincrement())
-  brand_name String   @unique @db.VarChar(50)
+  store_id   BigInt
+  brand_name String   @db.VarChar(50)
 
-  laptops    Laptop[]
+  store   Store    @relation(fields: [store_id], references: [store_id], onDelete: Cascade)
+  laptops Laptop[]
 
+  @@unique([store_id, brand_name])
+  @@unique([brand_id, store_id])
   @@map("brand")
 }
 
 model Laptop {
   laptop_id             BigInt   @id @default(autoincrement())
+  store_id              BigInt
   brand_id              BigInt
   model                 String   @db.VarChar(100)
   processor_brand       String   @db.VarChar(30)
@@ -32,84 +86,110 @@ model Laptop {
   quantity              Int      @default(0)
   availability          String   @default("Available") @db.VarChar(20)
 
-  brand                 Brand   @relation(fields: [brand_id], references: [brand_id])
-  processorBrandOption  ProcessorBrandOption @relation(fields: [processor_brand], references: [option_name], onDelete: Restrict, onUpdate: Cascade)
-  storageTypeOption     StorageTypeOption @relation(fields: [storage_type], references: [option_name], onDelete: Restrict, onUpdate: Cascade)
-  conditionOption       ConditionOption @relation(fields: [condition], references: [option_name], onDelete: Restrict, onUpdate: Cascade)
+  store                 Store                  @relation(fields: [store_id], references: [store_id], onDelete: Cascade)
+  brand                 Brand                  @relation(fields: [brand_id, store_id], references: [brand_id, store_id], onDelete: Restrict)
+  processorBrandOption  ProcessorBrandOption   @relation(fields: [store_id, processor_brand], references: [store_id, option_name], onDelete: Restrict, onUpdate: Cascade)
+  storageTypeOption     StorageTypeOption      @relation(fields: [store_id, storage_type], references: [store_id, option_name], onDelete: Restrict, onUpdate: Cascade)
+  conditionOption       ConditionOption        @relation(fields: [store_id, condition], references: [store_id, option_name], onDelete: Restrict, onUpdate: Cascade)
   images                LaptopImage[]
   specifications        LaptopSpecification[]
 
-    // Prevent duplicate laptop configurations
-  @@unique([brand_id, model, processor_brand, processor_model, processor_generation, ram_capacity, storage_capacity, storage_type, condition], map: "laptop_configuration_unique")
+  @@unique([laptop_id, store_id])
+  @@unique([store_id, brand_id, model, processor_brand, processor_model, processor_generation, ram_capacity, storage_capacity, storage_type, condition], map: "laptop_configuration_unique")
+  @@index([store_id])
   @@map("laptop")
 }
 
 model ProcessorBrandOption {
   option_id   BigInt   @id @default(autoincrement())
-  option_name String   @unique @db.VarChar(30)
+  store_id    BigInt
+  option_name String   @db.VarChar(30)
+  store       Store    @relation(fields: [store_id], references: [store_id], onDelete: Cascade)
   laptops     Laptop[]
 
+  @@unique([store_id, option_name])
+  @@unique([store_id, option_id])
   @@map("processor_brand_option")
 }
 
 model StorageTypeOption {
   option_id   BigInt   @id @default(autoincrement())
-  option_name String   @unique @db.VarChar(30)
+  store_id    BigInt
+  option_name String   @db.VarChar(30)
+  store       Store    @relation(fields: [store_id], references: [store_id], onDelete: Cascade)
   laptops     Laptop[]
 
+  @@unique([store_id, option_name])
+  @@unique([store_id, option_id])
   @@map("storage_type_option")
 }
 
 model ConditionOption {
   option_id   BigInt   @id @default(autoincrement())
-  option_name String   @unique @db.VarChar(20)
+  store_id    BigInt
+  option_name String   @db.VarChar(20)
+  store       Store    @relation(fields: [store_id], references: [store_id], onDelete: Cascade)
   laptops     Laptop[]
 
+  @@unique([store_id, option_name])
+  @@unique([store_id, option_id])
   @@map("condition_option")
 }
 
 model CustomSpecification {
   specification_id BigInt   @id @default(autoincrement())
-  name             String   @unique @db.VarChar(60)
+  store_id         BigInt
+  name             String   @db.VarChar(60)
   input_type       String   @db.VarChar(20)
   options          Json     @default("[]")
+  store            Store    @relation(fields: [store_id], references: [store_id], onDelete: Cascade)
   values           LaptopSpecification[]
 
+  @@unique([store_id, name])
+  @@unique([specification_id, store_id])
   @@map("custom_specification")
 }
 
 model LaptopSpecification {
   laptop_id        BigInt
   specification_id BigInt
+  store_id         BigInt
   value            String   @db.VarChar(250)
   number_value     Float?
 
-  laptop Laptop @relation(fields: [laptop_id], references: [laptop_id], onDelete: Cascade)
-  specification CustomSpecification @relation(fields: [specification_id], references: [specification_id], onDelete: Restrict)
+  laptop        Laptop              @relation(fields: [laptop_id, store_id], references: [laptop_id, store_id], onDelete: Cascade)
+  specification CustomSpecification @relation(fields: [specification_id, store_id], references: [specification_id, store_id], onDelete: Restrict)
 
   @@id([laptop_id, specification_id])
-  @@index([specification_id])
+  @@index([store_id, specification_id])
   @@map("laptop_specification")
 }
 
 model LaptopImage {
   image_id              BigInt   @id @default(autoincrement())
   laptop_id             BigInt
+  store_id              BigInt
   image_url             String   @db.VarChar(255)
   cloudinary_public_id  String?  @db.VarChar(255)
   is_primary            Boolean  @default(false)
 
-  laptop       Laptop   @relation(fields: [laptop_id], references: [laptop_id], onDelete: Cascade)
+  laptop Laptop @relation(fields: [laptop_id, store_id], references: [laptop_id, store_id], onDelete: Cascade)
 
+  @@index([store_id, laptop_id])
   @@map("laptop_image")
 }
 
 model Administrator {
-  admin_id      BigInt   @id @default(autoincrement())
-  username      String   @unique @db.VarChar(50)
-  email         String   @unique @db.VarChar(100)
-  password_hash String   @db.VarChar(255)
+  admin_id                BigInt  @id @default(autoincrement())
+  store_id                BigInt
+  username                String  @db.VarChar(50)
+  email                   String  @db.VarChar(100)
+  password_hash           String  @db.VarChar(255)
+  must_change_password    Boolean @default(true)
+  store                   Store   @relation(fields: [store_id], references: [store_id], onDelete: Cascade)
 
+  @@unique([store_id, username])
+  @@unique([store_id, email])
   @@map("administrator")
 }
 

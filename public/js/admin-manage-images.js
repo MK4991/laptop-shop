@@ -1,6 +1,6 @@
 
 const laptopId = window.location.pathname.match(
-    /^\/admin\/laptops\/(\d+)\/images\/?$/
+    /^\/s\/[^/]+\/admin\/laptops\/(\d+)\/images\/?$/
 )?.[1];
 
 const imageList = document.getElementById('imageList');
@@ -34,7 +34,7 @@ function showConfirmation(title, message) {
 // Load laptop information
 async function loadLaptopDetails() {
     try {
-        const response = await fetch(`/api/laptops/${laptopId}`, {
+        const response = await fetch(storeApi(`/laptops/${laptopId}`), {
             credentials: 'same-origin'
         });
 
@@ -67,7 +67,7 @@ async function loadImages() {
     imageList.textContent = 'Loading images...';
 
     try {
-        const response = await fetch(`/api/laptops/${laptopId}/images`, {
+        const response = await fetch(storeApi(`/laptops/${laptopId}/images`), {
             credentials: 'same-origin'
         });
 
@@ -130,7 +130,7 @@ async function loadImages() {
 async function setPrimaryImage(imageId) {
     try {
         const response = await fetch(
-            `/api/laptops/${laptopId}/images/${imageId}/primary`,
+            storeApi(`/laptops/${laptopId}/images/${imageId}/primary`),
             {
                 method: 'PATCH',
                 credentials: 'same-origin'
@@ -162,7 +162,7 @@ async function deleteImage(imageId) {
 
     try {
         const response = await fetch(
-            `/api/laptops/${laptopId}/images/${imageId}`,
+            storeApi(`/laptops/${laptopId}/images/${imageId}`),
             {
                 method: 'DELETE',
                 credentials: 'same-origin'
@@ -225,7 +225,7 @@ uploadButton.addEventListener('click', async () => {
 
     try {
         const response = await fetch(
-            `/api/laptops/${laptopId}/images`,
+            storeApi(`/laptops/${laptopId}/images`),
             {
                 method: 'POST',
                 credentials: 'same-origin',
@@ -251,11 +251,24 @@ uploadButton.addEventListener('click', async () => {
     }
 });
 
+// Authenticate before loading the tenant's image management data.
+async function initializeImageManager() {
+    try {
+        const authResponse = await fetch(storeApi('/auth/me'));
+        if (!authResponse.ok) return window.location.assign(storePath('/admin/login'));
+        const authResult = await authResponse.json();
+        if (authResult.admin?.mustChangePassword) return window.location.assign(storePath('/admin/change-password'));
+        await loadStoreProfile();
+        await Promise.all([loadLaptopDetails(), loadImages()]);
+    } catch (error) {
+        showMessage(error.message || 'Could not initialize image management.', true);
+    }
+}
+
 // Load laptop information and images when the page opens
 if (!laptopId) {
     showMessage('Invalid laptop URL.', true);
     uploadButton.disabled = true;
 } else {
-    loadLaptopDetails();
-    loadImages();
+    initializeImageManager();
 }

@@ -9,6 +9,8 @@
     <title>Dashboard | LIQ TECHNOLOGIES</title>
 
     <link rel="stylesheet" href="/css/admin-dashboard.css">
+    <link rel="stylesheet" href="/css/admin-theme.css">
+    <script src="/js/admin-theme.js" defer></script>
 </head>
 
 <body>
@@ -21,7 +23,7 @@
             <div class="sidebar-brand">
                 <div class="brand-icon">L</div>
                 <div>
-                    <h2>LIQ TECHNOLOGIES</h2>
+                    <h2 class="store-brand-name">LIQ TECHNOLOGIES</h2>
                     <span>ADMIN PANEL</span>
                 </div>
             </div>
@@ -29,19 +31,19 @@
             <div class="sidebar-label">WORKSPACE</div>
 
             <nav class="sidebar-nav">
-                <a href="/admin" class="nav-link active">
+                <a href="/admin" data-store-route="/admin" class="nav-link active">
                     <span class="nav-icon">▦</span>
                     Dashboard
                 </a>
 
-                <a href="#inventory" class="nav-link">
+                <a href="#inventory" data-store-route="/admin#inventory" class="nav-link">
                     <span class="nav-icon">▤</span>
                     Laptop Inventory
                 </a>
 
-                <a href="/admin/settings/options" class="nav-link">
+                <a href="/admin/settings" data-store-route="/admin/settings" class="nav-link">
                     <span class="nav-icon">⚙</span>
-                    Form Options
+                    Settings
                 </a>
 
                 <button class="nav-link" id="sidebarAddLaptopBtn">
@@ -95,7 +97,7 @@
                 <div class="welcome-section">
                     <div>
                         <span class="section-tag">STORE MANAGEMENT</span>
-                        <h1>Welcome back!</h1>
+                        <h1>Welcome back, <span id="dashboardWelcomeName">Admin</span>!</h1>
                         <p>Here's what's happening with your laptop inventory.</p>
                     </div>
 
@@ -164,12 +166,74 @@
                     <!-- Dashboard messages -->
                     <p id="dashboardMessage" class="dashboard-message"></p>
 
+                    <form id="inventoryFilters" class="inventory-filters" role="search">
+                        <div class="inventory-filter-toolbar">
+                            <div class="inventory-filter-search">
+                                <label for="inventorySearch">Search inventory</label>
+                                <input id="inventorySearch" type="search" placeholder="Brand, model, or processor" autocomplete="off">
+                            </div>
+                            <button type="button" id="toggleInventoryFilters" class="inventory-filter-toggle" aria-expanded="false" aria-controls="inventoryFilterPanel" aria-label="Filters">
+                                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M3 5h18l-7 8v5l-4 2v-7L3 5z"></path></svg>
+                                <span>Filters</span>
+                                <span id="activeFilterCount" class="active-filter-count" hidden></span>
+                            </button>
+                        </div>
+                        <div id="inventoryFilterPanel" class="inventory-filter-panel" hidden>
+                        <div class="inventory-filter-grid">
+                            <label>Brand
+                                <select id="inventoryBrand"><option value="">All brands</option></select>
+                            </label>
+                            <label>Processor brand
+                                <select id="inventoryProcessor"><option value="">All processor brands</option></select>
+                            </label>
+                            <label>Processor generation
+                                <select id="inventoryGeneration"><option value="">All generations</option></select>
+                            </label>
+                            <label>RAM (GB)
+                                <input id="inventoryRam" type="number" min="1" step="1" placeholder="Any capacity">
+                            </label>
+                            <label>Storage capacity (GB)
+                                <input id="inventoryStorage" type="number" min="1" step="1" placeholder="Any capacity">
+                            </label>
+                            <label>Storage type
+                                <select id="inventoryStorageType"><option value="">All storage types</option></select>
+                            </label>
+                            <label>Condition
+                                <select id="inventoryCondition"><option value="">All conditions</option></select>
+                            </label>
+                            <label>Availability
+                                <select id="inventoryAvailability">
+                                    <option value="">All inventory</option>
+                                    <option value="available">Available and in stock</option>
+                                    <option value="unavailable">Unavailable or out of stock</option>
+                                </select>
+                            </label>
+                            <fieldset class="inventory-price-filter">
+                                <legend>Price (ETB)</legend>
+                                <input id="inventoryMinPrice" type="number" min="0" step="any" placeholder="Min" aria-label="Minimum price">
+                                <span>to</span>
+                                <input id="inventoryMaxPrice" type="number" min="0" step="any" placeholder="Max" aria-label="Maximum price">
+                            </fieldset>
+                            <label>Sort by
+                                <select id="inventorySort">
+                                    <option value="newest">Newest first</option>
+                                    <option value="price_asc">Price: low to high</option>
+                                    <option value="price_desc">Price: high to low</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div id="inventoryCustomFilters" class="inventory-custom-filters"></div>
+                        <div class="inventory-filter-actions">
+                            <button type="button" id="clearInventoryFilters" class="clear-inventory-filters">Clear filters</button>
+                        </div>
+                        </div>
+                    </form>
+
                     <div class="table-container">
 
                         <table>
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Brand</th>
                                     <th>Model</th>
                                     <th>Processor</th>
@@ -184,7 +248,7 @@
 
                             <tbody id="laptopTableBody">
                                 <tr>
-                                    <td colspan="10">Loading inventory...</td>
+                                    <td colspan="9">Loading inventory...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -208,7 +272,7 @@
 
 
                 <footer class="dashboard-footer">
-                    <span>LIQ TECHNOLOGIES Admin Panel</span>
+                    <span class="store-admin-label">LIQ TECHNOLOGIES Admin Panel</span>
                     <span>Inventory Management System</span>
                 </footer>
 
@@ -243,6 +307,7 @@
             </form>
         </div>
     </dialog>
+    <script src="/js/store-context.js"></script>
     <script src="/js/admin-dashboard.js"></script>
 
 </body>

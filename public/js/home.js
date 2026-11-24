@@ -1,6 +1,63 @@
 
 const featuredContainer =
     document.getElementById('featuredLaptops');
+const featuredCarousel = document.getElementById('featuredCarousel');
+
+function setupFeaturedCarousel() {
+    const mobileView = window.matchMedia('(max-width: 850px)');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let timer;
+    let resumeTimer;
+    let transitionTimer;
+    let currentIndex = 0;
+
+    const cards = () => [...featuredContainer.querySelectorAll('.product-card')];
+    const stop = () => {
+        window.clearInterval(timer);
+        timer = null;
+        window.clearTimeout(transitionTimer);
+        featuredContainer.classList.remove('is-auto-fading');
+    };
+    const goTo = (index) => {
+        const items = cards();
+        if (!items.length) return;
+        currentIndex = (index + items.length) % items.length;
+        const card = items[currentIndex];
+        featuredContainer.scrollTo({ left: card.offsetLeft - items[0].offsetLeft, behavior: 'smooth' });
+    };
+    const start = () => {
+        stop();
+        if (!mobileView.matches || reducedMotion.matches || cards().length < 2) return;
+        timer = window.setInterval(() => {
+            featuredContainer.classList.add('is-auto-fading');
+            transitionTimer = window.setTimeout(() => {
+                goTo(currentIndex + 1);
+                window.requestAnimationFrame(() => {
+                    window.requestAnimationFrame(() => featuredContainer.classList.remove('is-auto-fading'));
+                });
+            }, 240);
+        }, 3500);
+    };
+    const pauseBriefly = () => {
+        stop();
+        window.clearTimeout(resumeTimer);
+        resumeTimer = window.setTimeout(start, 5000);
+    };
+    featuredContainer.addEventListener('scroll', () => {
+        const items = cards();
+        if (!items.length) return;
+        const distance = Math.max(0, featuredContainer.scrollLeft);
+        const step = items[0].getBoundingClientRect().width + parseFloat(getComputedStyle(featuredContainer).columnGap || '0');
+        if (step > 0) currentIndex = Math.min(items.length - 1, Math.round(distance / step));
+    }, { passive: true });
+    featuredContainer.addEventListener('touchstart', pauseBriefly, { passive: true });
+    featuredContainer.addEventListener('pointerdown', pauseBriefly);
+    featuredCarousel.addEventListener('mouseenter', stop);
+    featuredCarousel.addEventListener('mouseleave', start);
+    mobileView.addEventListener('change', start);
+    reducedMotion.addEventListener('change', start);
+    start();
+}
 
 // Format prices in Ethiopian Birr
 function formatPrice(price) {
@@ -85,8 +142,8 @@ function createLaptopCard(laptop) {
 
     const button = document.createElement('a');
     button.className = 'product-button';
-    button.href = '/laptops';
-    button.textContent = 'Browse Laptops →';
+    button.href = storePath(`/laptops/${encodeURIComponent(laptop.laptop_id)}`);
+    button.textContent = 'View Details →';
 
     details.append(
         brand,
@@ -106,7 +163,8 @@ async function loadFeaturedLaptops() {
     featuredContainer.textContent = 'Loading laptops...';
 
     try {
-        const response = await fetch('/api/laptops?available_only=true&per_page=3&page=1');
+        await loadStoreProfile();
+        const response = await fetch(storeApi('/laptops?available_only=true&per_page=3&page=1'));
         const result = await response.json();
 
         if (!response.ok) {
@@ -129,6 +187,7 @@ async function loadFeaturedLaptops() {
             const card = createLaptopCard(laptop);
             featuredContainer.appendChild(card);
         });
+        setupFeaturedCarousel();
 
     } catch (error) {
         console.error('Featured laptops error:', error);
