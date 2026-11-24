@@ -679,6 +679,11 @@ body:not(.admin-dark) .login-heading h1 {
     color: #172d4a;
 }
 
+body:not(.admin-dark) .branding-panel .store-brand-name,
+body:not(.admin-dark) .branding-panel .branding-content h1 {
+    color: #fff !important;
+}
+
 body:not(.admin-dark) .section-tag,
 body:not(.admin-dark) .form-tag,
 body:not(.admin-dark) .eyebrow,
