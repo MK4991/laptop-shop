@@ -462,7 +462,6 @@ toggleCustomerFilters.addEventListener('click', () => {
     toggleCustomerFilters.querySelector('.customer-filter-toggle-label').textContent = expanded
         ? 'Show filters'
         : 'Hide filters';
-    toggleCustomerFilters.querySelector('.customer-filter-toggle-icon').textContent = expanded ? '⌄' : '⌃';
 });
 
 
